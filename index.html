@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabriel Emrick DAHISSIHO | Stratège & Designer</title>
+    
+    <!-- FONTS & ICONS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- VARIABLES & THEME --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(30, 30, 35, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+            --accent: #d4af37; /* Or */
+            --accent-glow: rgba(212, 175, 55, 0.2);
+            --border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- RESET & BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--bg-color);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 10px; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+            cursor: default; 
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        ul { list-style: none; }
+        button { border: none; background: none; cursor: pointer; outline: none; }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 2; }
+        .section-spacer { padding: 6rem 0; }
+        
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+
+        /* --- BACKGROUND FX --- */
+        .background-container {
+            position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+        }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.25;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+        .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -20%; right: -10%; }
+        .orb-2 { width: 500px; height: 500px; background: #ffffff; bottom: -10%; left: -10%; opacity: 0.05; animation-delay: -5s; }
+        .orb-3 { width: 300px; height: 300px; background: var(--accent); top: 40%; left: 30%; opacity: 0.1; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        .noise {
+            position: fixed; inset: 0; z-index: 1; opacity: 0.03; pointer-events: none;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJnoiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2cpIiBvcGFjaXR5PSIwLjUiLz48L3N2Zz4=');
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 1.5rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(15px);
+            background: rgba(5, 5, 5, 0.7);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .logo { font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px; color: #fff; }
+        .nav-menu { display: flex; gap: 2rem; }
+        .nav-item { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+        .nav-item:hover, .nav-item.active { color: var(--accent); }
+        .nav-btn {
+            padding: 0.6rem 1.4rem; border: 1px solid var(--border-color);
+            border-radius: 50px; font-size: 0.85rem; color: #fff; transition: 0.3s;
+        }
+        .nav-btn:hover { border-color: var(--accent); background: var(--accent-glow); color: var(--accent); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 90vh; display: flex; align-items: center;
+            padding-top: 6rem; position: relative;
+        }
+        .hero-content { max-width: 850px; }
+        .eyebrow {
+            color: var(--accent); font-size: 0.85rem; letter-spacing: 3px; font-weight: 600;
+            margin-bottom: 1rem; display: block; text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            min-height: 2.4em;
+        }
+        .hero p {
+            font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin-top: 1rem;
+        }
+        .cursor-blink {
+            display: inline-block; width: 3px; height: 1em; background: var(--accent);
+            margin-left: 5px; vertical-align: middle; animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- SECTIONS UTILS --- */
+        .section-header { margin-bottom: 4rem; }
+        .section-header h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .section-header p { color: var(--text-muted); }
+        .line { width: 60px; height: 3px; background: var(--accent); margin-top: 1rem; }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex; flex-direction: column; align-items: flex-start;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        }
+        .card-icon { font-size: 2rem; color: var(--accent); margin-bottom: 1.5rem; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; flex-grow: 1; }
+        
+        .tag-container { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 4px; color: #ccc; }
+
+        /* --- CERTIFICATIONS GRID --- */
+        .cert-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+        .cert-column h3 {
+            font-size: 1.2rem; margin-bottom: 1.5rem; padding-bottom: 1rem;
+            border-bottom: 1px solid var(--accent); color: #fff;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .cert-list { display: flex; flex-direction: column; gap: 1rem; }
+        .cert-item {
+            display: flex; align-items: flex-start; gap: 1rem;
+            padding: 1rem; border-radius: 8px;
+            background: rgba(255,255,255,0.02); border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .cert-item:hover { background: rgba(255,255,255,0.05); border-color: var(--accent-glow); transform: translateX(5px); }
+        .cert-icon {
+            width: 32px; height: 32px; background: rgba(212, 175, 55, 0.1);
+            color: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+        }
+        .cert-info strong { display: block; font-size: 0.95rem; color: #eee; line-height: 1.3; margin-bottom: 2px; }
+        .cert-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 6rem 0 3rem 0; text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+        .contact-box {
+            display: inline-flex; flex-direction: column; gap: 1.5rem;
+            margin: 3rem 0; padding: 3rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+            border-radius: 20px; border: 1px solid var(--border-color);
+            width: 100%; max-width: 500px;
+        }
+        
+        /* MODIFICATION : Classe générique pour info statique */
+        .static-info {
+            font-size: 1.15rem; color: #fff; font-weight: 500;
+            padding: 1rem 2rem; background: rgba(0,0,0,0.3); border-radius: 12px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            cursor: text; user-select: all; border: 1px solid var(--accent);
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .static-info:hover {
+            background: rgba(212, 175, 55, 0.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+        
+        .social-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; }
+        .social-link { font-size: 1.5rem; color: var(--text-muted); transition: 0.3s; }
+        .social-link:hover { color: var(--accent); transform: scale(1.1); }
+
+        /* --- UTILS --- */
+        .reveal { opacity: 0; transform: translateY(20px); transition: 0.8s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        #back-to-top {
+            position: fixed; bottom: 2rem; right: 2rem;
+            width: 45px; height: 45px; background: var(--accent); color: #000;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; opacity: 0; transition: 0.4s; transform: translateY(10px); pointer-events: none;
+        }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+        #preloader {
+            position: fixed; inset: 0; background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .loader-text { font-family: 'Space Grotesk'; font-size: 2rem; color: var(--accent); letter-spacing: 5px; animation: pulse 1.5s infinite; }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; gap: 3rem; }
+            .cert-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .hero h1 { font-size: 2.5rem; }
+            .nav-menu { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PRELOADER -->
+    <div id="preloader"><div class="loader-text">DGET</div></div>
+
+    <!-- BACKGROUND -->
+    <div class="background-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="noise"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">GABRIEL EMRICK</div>
+        <div class="nav-menu">
+            <a href="#about" class="nav-item">À propos</a>
+            <a href="#expertise" class="nav-item">Expertise</a>
+            <a href="#projects" class="nav-item">Projets</a>
+        </div>
+        <a href="#contact" class="nav-btn">Contact</a>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero container">
+        <div class="hero-content">
+            <span class="eyebrow reveal active">Chef de Projet Multidisciplinaire</span>
+            <h1 class="reveal active" style="transition-delay: 0.1s;">
+                <span id="type-prefix"></span><br>
+                <span id="type-suffix"></span><span class="cursor-blink"></span>
+            </h1>
+            <p class="reveal active" style="transition-delay: 0.2s;">
+                Transformer le chaos en clarté. Une approche où la rigueur de la gestion rencontre l'élégance du design, pour l'écosystème ouest-africain.
+            </p>
+        </div>
+    </header>
+
+    <!-- ABOUT -->
+    <section id="about" class="section-spacer container">
+        <div class="grid-2">
+            <div class="reveal">
+                <div class="section-header">
+                    <h2>L'Architecte<br>de vos projets.</h2>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <div class="reveal" style="transition-delay: 0.1s;">
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: #fff;">
+                    Je suis <strong>Gabriel Emrick DAHISSIHO</strong>. Basé à Abidjan, j'opère à l'intersection du management, du design et de la technologie.
+                </p>
+                <p style="color: var(--text-muted);">
+                    Mon rôle ne se limite pas à gérer des tâches. Je conçois des systèmes cohérents. Que ce soit une interface utilisateur, un processus logistique ou une identité de marque, je cherche toujours l'équilibre parfait entre fonctionnalité et esthétique.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERTISE -->
+    <section id="expertise" class="section-spacer container">
+        <div class="section-header reveal">
+            <h2>Expertise</h2>
+            <p>Mes piliers d'intervention stratégiques.</p>
+        </div>
+        
+        <div class="grid-3">
+            <div class="card reveal">
+                <i class="fa-solid fa-layer-group card-icon"></i>
+                <h3>Gestion & Transfo.</h3>
+                <p>Pilotage de cycles de vie complets (Agile/Waterfall). Audit de processus et implémentation d'outils digitaux pour maximiser l'efficacité opérationnelle.</p>
+                <div class="tag-container"><span class="tag">Jira</span><span class="tag">Notion</span><span class="tag">KPIs</span></div>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                <i class="fa-solid fa-compass-drafting card-icon"></i>
+                <h3>Product Design (UX/UI)</h3>
+                <p>Conception d'interfaces intuitives centrées sur l'humain. De la recherche utilisateur aux prototypes haute-fidélité.</p>
+                <div class="tag-container"><span class="tag">Figma</span><span class="tag">Wireframing</span><span class="tag">Prototyping</span></div>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                <i class="fa-solid fa-pen-nib card-icon"></i>
+                <h3>Branding & Identité</h3>
+                <p>Création d'univers visuels forts. Logos, chartes graphiques et supports de communication qui racontent une histoire.</p>
+                <div class="tag-container"><span class="tag">Adobe Ai</span><span class="tag">Ps</span><span class="tag">Storytelling</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJETS -->
+    <section id="projects" class="section-spacer container">
+        <div class="section-header reveal">
+            <h2>Hall of Impact</h2>
+            <p>Sélection de projets récents.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card reveal">
+                <div class="card-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <h3>JDIS – Digital System</h3>
+                <p>Supervision d'un ERP logistique complet. Optimisation des flux d'information entre le terrain et la direction.</p>
+                <div class="tag-container"><span class="tag" style="color:var(--accent)">Project Management</span></div>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                <div class="card-icon"><i class="fa-solid fa-masks-theater"></i></div>
+                <h3>CDCRB Patrimoine</h3>
+                <p>Direction artistique pour la valorisation du patrimoine béninois. Modernisation visuelle des traditions royales.</p>
+                <div class="tag-container"><span class="tag" style="color:var(--accent)">Art Direction</span></div>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                <div class="card-icon"><i class="fa-solid fa-mobile-screen"></i></div>
+                <h3>Le Petit Nokoué</h3>
+                <p>Audit UX complet et refonte de l'interface pour améliorer la rétention utilisateur et la fluidité du parcours.</p>
+                <div class="tag-container"><span class="tag" style="color:var(--accent)">Product Design</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section id="certifications" class="section-spacer container">
+        <div class="section-header reveal">
+            <h2>Hall of Fame</h2>
+            <p>Apprentissage continu & Certifications.</p>
+        </div>
+
+        <div class="cert-grid">
+            <!-- Colonne 1 -->
+            <div class="cert-column reveal">
+                <h3><i class="fa-solid fa-rocket"></i> Gestion & Innovation</h3>
+                <div class="cert-list">
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+                        <div class="cert-info"><strong>Gen AI for PMs</strong><span>PMI Institute</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-cube"></i></div>
+                        <div class="cert-info"><strong>Product Mgmt Basics</strong><span>Pendo.io</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-brands fa-microsoft"></i></div>
+                        <div class="cert-info"><strong>Career Essentials AI</strong><span>Microsoft & LinkedIn</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="cert-info"><strong>Elements of AI</strong><span>Univ. of Helsinki</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-leaf"></i></div>
+                        <div class="cert-info"><strong>Green Digital Skills</strong><span>INCO Academy</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne 2 -->
+            <div class="cert-column reveal" style="transition-delay: 0.1s;">
+                <h3><i class="fa-solid fa-bullhorn"></i> Marketing Digital</h3>
+                <div class="cert-list">
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-brands fa-hubspot"></i></div>
+                        <div class="cert-info"><strong>Marketing Digital</strong><span>HubSpot Academy</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-brands fa-hubspot"></i></div>
+                        <div class="cert-info"><strong>Inbound Marketing</strong><span>HubSpot Academy</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-bullseye"></i></div>
+                        <div class="cert-info"><strong>Digital Ad Cert.</strong><span>Aleph Group</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-brands fa-google"></i></div>
+                        <div class="cert-info"><strong>Google Ads Search</strong><span>Google</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-brands fa-google"></i></div>
+                        <div class="cert-info"><strong>Fondamentaux Numérique</strong><span>Google Digital Garage</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne 3 -->
+            <div class="cert-column reveal" style="transition-delay: 0.2s;">
+                <h3><i class="fa-solid fa-microchip"></i> Tech & Design</h3>
+                <div class="cert-list">
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-eye"></i></div>
+                        <div class="cert-info"><strong>AI Visualization</strong><span>Columbia University</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-robot"></i></div>
+                        <div class="cert-info"><strong>AI in Web Design</strong><span>Udemy</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-solid fa-palette"></i></div>
+                        <div class="cert-info"><strong>Adobe Suite Advanced</strong><span>Udemy</span></div>
+                    </div>
+                    <div class="cert-item">
+                        <div class="cert-icon"><i class="fa-brands fa-github"></i></div>
+                        <div class="cert-info"><strong>Git & GitHub</strong><span>LinkedIn Learning</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="container">
+        <div class="reveal">
+            <h2>Prêt à collaborer ?</h2>
+            <p style="color:var(--text-muted); margin-top:0.5rem;">Discutons de votre prochain défi.</p>
+            
+            <div class="contact-box">
+                <!-- EMAIL STATIQUE -->
+                <div class="static-info">
+                    <i class="fa-regular fa-envelope"></i> dahissihogabriel@gmail.com
+                </div>
+                
+                <!-- TÉLÉPHONE STATIQUE (AJOUT) -->
+                <div class="static-info">
+                    <i class="fa-solid fa-phone"></i> +225 05 96 48 93 43
+                </div>
+                
+                <div class="social-links">
+                    <a href="https://tally.so/r/mOWLJA" target="_blank" class="social-link" title="Réserver un call"><i class="fa-solid fa-calendar-check"></i></a>
+                    <a href="https://www.linkedin.com/in/gabriel-emrick-tognimanbou-dahissiho-99b0b7133/" target="_blank" class="social-link" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div style="font-size: 0.8rem; color: var(--text-muted); opacity: 0.5;">
+                © 2024 Gabriel Emrick DAHISSIHO. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <button id="back-to-top"><i class="fa-solid fa-arrow-up"></i></button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* 1. PRELOADER */
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                setTimeout(startTypewriter, 500); // Lance l'écriture après
+            }, 2000);
+
+            /* 2. TYPEWRITER EFFECT (STABLE) */
+            const prefix = "Stratégie, Design &";
+            const suffixes = ["Intelligence Opérationnelle", "Transformation Digitale", "Expérience Utilisateur"];
+            const prefixEl = document.getElementById('type-prefix');
+            const suffixEl = document.getElementById('type-suffix');
+            let suffixIndex = 0, charIndex = 0, isDeleting = false, isPrefixDone = false;
+
+            function startTypewriter() {
+                let pIndex = 0;
+                function typePrefix() {
+                    if (pIndex < prefix.length) {
+                        prefixEl.textContent += prefix.charAt(pIndex);
+                        pIndex++;
+                        setTimeout(typePrefix, 50);
+                    } else {
+                        isPrefixDone = true;
+                        typeSuffix();
+                    }
+                }
+                typePrefix();
+            }
+
+            function typeSuffix() {
+                const current = suffixes[suffixIndex];
+                
+                if (isDeleting) {
+                    suffixEl.textContent = current.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    suffixEl.textContent = current.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let speed = isDeleting ? 50 : 100;
+
+                if (!isDeleting && charIndex === current.length) {
+                    speed = 3000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    suffixIndex = (suffixIndex + 1) % suffixes.length;
+                    speed = 500;
+                }
+                setTimeout(typeSuffix, speed);
+            }
+
+            /* 3. SCROLL REVEAL */
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            /* 4. BACK TO TOP */
+            const backBtn = document.getElementById('back-to-top');
+            window.addEventListener('scroll', () => {
+                if(window.scrollY > 500) backBtn.classList.add('visible');
+                else backBtn.classList.remove('visible');
+            });
+            backBtn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+        });
+    </script>
+</body>
+</html>
