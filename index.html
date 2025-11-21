@@ -718,13 +718,13 @@
                 }
                 let speed = isDeleting ? 40 : 80;
                 if (!isDeleting && charIndex === currentRole.length) {
-                    speed = 2500; isDeleting = true;
+                    speed = 5000; isDeleting = true;
                 } else if (isDeleting && charIndex === 0) {
                     isDeleting = false; roleIndex = (roleIndex + 1) % roles.length; speed = 500;
                 }
-                setTimeout(type, 1500);
+                setTimeout(type, 2500);
             }
-            setTimeout(type, 1500);
+            setTimeout(type, 2000);
         });
     </script>
 </body>
