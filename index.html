@@ -710,27 +710,27 @@
             function type() {
                 const currentRole = roles[roleIndex];
 
-                if (isDeleting) {
+if (isDeleting) {
     textElement.textContent = currentRole.substring(0, charIndex - 1);
     charIndex--;
-        } else {
+} else {
     textElement.textContent = currentRole.substring(0, charIndex + 1);
     charIndex++;
-                }
+}
 
-// Vitesses ajustées pour un effet plus naturel
-let speed = isDeleting ? 30 : 60; // Plus rapide pour l'écriture
+// Vitesses plus lentes pour un effet naturel
+let speed = isDeleting ? 50 : 100; // Écriture à vitesse humaine
 
 if (!isDeleting && charIndex === currentRole.length) {
-    // Pause après avoir fini d'écrire
-    speed = 2000;
+    // Pause après avoir fini d'écrire (temps de lecture)
+    speed = 2500;
     isDeleting = true;
-                            } else if (isDeleting && charIndex === 0) {
+} else if (isDeleting && charIndex === 0) {
     // Pause avant de commencer le prochain mot
     isDeleting = false;
     roleIndex = (roleIndex + 1) % roles.length;
-    speed = 500;
-                }
+    speed = 800;
+}
 
 setTimeout(type, speed);
             }
