@@ -74,7 +74,10 @@ button {
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background: var(--paper);
+  background:
+    linear-gradient(115deg, #f1efe8 0%, #f7f2df 34%, #ffe4da 68%, #f1efe8 100%);
+  background-size: 180% 180%;
+  animation: paper-breath 13s ease-in-out infinite alternate;
 }
 
 .ambient-bg::after {
@@ -84,15 +87,15 @@ button {
   background:
     radial-gradient(circle at var(--mx) var(--my), #ff4d2e1f, transparent 24rem),
     radial-gradient(circle at calc(100% - var(--mx)) calc(100% - var(--my)), #d7ff3820, transparent 22rem);
-  opacity: .78;
+  opacity: .95;
   transition: opacity .3s;
 }
 
 .ambient-bg i {
   position: absolute;
   border-radius: 50%;
-  filter: blur(95px);
-  opacity: .16;
+  filter: blur(82px);
+  opacity: .24;
   will-change: transform;
 }
 
@@ -133,6 +136,10 @@ button {
 
 @keyframes ambient-three {
   to { transform: translate(-16vw, -14vh) scale(.9); }
+}
+
+@keyframes paper-breath {
+  to { background-position: 100% 72%; }
 }
 
 .scroll-progress {
@@ -291,6 +298,11 @@ button {
   border-radius: 50%;
   background: #4faf35;
   box-shadow: 0 0 0 5px #4faf3520;
+  animation: availability-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes availability-pulse {
+  50% { box-shadow: 0 0 0 9px #4faf350f; transform: scale(1.15); }
 }
 
 .hero-grid {
@@ -355,6 +367,7 @@ em {
   position: relative;
   cursor: pointer;
   touch-action: manipulation;
+  animation: chaos-call 3.2s ease-in-out infinite;
   transition: color .25s, transform .3s;
 }
 
@@ -366,8 +379,9 @@ em {
   bottom: .05em;
   height: .07em;
   background: var(--accent);
-  transform: scaleX(0);
+  transform: scaleX(.16);
   transform-origin: right;
+  animation: chaos-underline 3.2s ease-in-out infinite;
   transition: transform .4s cubic-bezier(.16, 1, .3, 1);
 }
 
@@ -379,6 +393,16 @@ em {
 .hero-title em:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+@keyframes chaos-call {
+  0%, 72%, 100% { color: inherit; transform: none; }
+  82% { color: var(--accent); transform: skewX(-5deg) translateY(-.025em); }
+}
+
+@keyframes chaos-underline {
+  0%, 55%, 100% { transform: scaleX(.16); opacity: .7; }
+  78% { transform: scaleX(1); opacity: 1; }
 }
 
 .hero-title em.dispersing {
@@ -430,7 +454,7 @@ em {
     linear-gradient(90deg, transparent, #ffffff18, transparent),
     repeating-linear-gradient(0deg, #ffffff08 0 1px, transparent 1px 13px);
   transform: translateX(-120%);
-  animation: stage-scan 7s cubic-bezier(.16, 1, .3, 1) infinite;
+  animation: stage-scan 4.8s cubic-bezier(.16, 1, .3, 1) infinite;
 }
 
 .hero-stage::after {
@@ -466,6 +490,7 @@ em {
   font: 800 clamp(5rem, 14vw, 12.5rem) / .72 Syne;
   letter-spacing: -.08em;
   opacity: .14;
+  animation: stage-copy-drift 8s ease-in-out infinite alternate;
 }
 
 .stage-copy span:last-child {
@@ -476,6 +501,7 @@ em {
   z-index: 2;
   font: 800 clamp(5rem, 12vw, 10rem) Syne;
   letter-spacing: -.12em;
+  animation: monogram-pulse 4.2s ease-in-out infinite;
 }
 
 .orbit {
@@ -483,6 +509,7 @@ em {
   border: 1px solid #fff9;
   border-radius: 50%;
   transform: rotate(-18deg);
+  animation: orbit-turn 9s linear infinite;
 }
 
 .orbit.one {
@@ -493,11 +520,26 @@ em {
 .orbit.two {
   width: 520px;
   height: 250px;
+  animation-direction: reverse;
+  animation-duration: 13s;
 }
 
 .hero-stage .monogram,
 .hero-stage .orbit {
   transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes stage-copy-drift {
+  to { transform: translate3d(-2.5%, 1.5%, 0) scale(1.035); }
+}
+
+@keyframes monogram-pulse {
+  0%, 100% { filter: drop-shadow(0 0 0 #ffffff00); transform: scale(1); }
+  50% { filter: drop-shadow(0 20px 35px #00000018); transform: scale(1.025); }
+}
+
+@keyframes orbit-turn {
+  to { rotate: 360deg; }
 }
 
 .hero-stage p {
@@ -522,10 +564,16 @@ em {
   gap: .75rem;
   padding: 2.3rem 1rem;
   border-right: 1px solid var(--line);
+  transition: background .25s, transform .25s;
 }
 
 .stats div:last-child {
   border-right: 0;
+}
+
+.stats div:hover {
+  background: #fff7;
+  transform: translateY(-4px);
 }
 
 .stats strong {
@@ -791,6 +839,27 @@ em {
   transition: transform .25s, filter .25s;
 }
 
+.project::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(120deg, transparent 0 38%, #ffffff45 48%, transparent 58% 100%);
+  transform: translateX(-130%);
+  animation: card-sweep 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.project:nth-child(2)::before { animation-delay: .8s; }
+.project:nth-child(3)::before { animation-delay: 1.4s; }
+.project:nth-child(4)::before { animation-delay: 2s; }
+
+@keyframes card-sweep {
+  0%, 62% { transform: translateX(-130%); }
+  86%, 100% { transform: translateX(130%); }
+}
+
 .project .meta {
   transition: opacity .25s, transform .25s;
 }
@@ -817,13 +886,13 @@ em {
   inset: 0;
   border-radius: inherit;
   background: radial-gradient(circle at var(--px, 50%) var(--py, 50%), #fff6, transparent 35%);
-  opacity: 0;
+  opacity: .18;
   transition: opacity .25s;
   pointer-events: none;
 }
 
 .project:hover::after {
-  opacity: 1;
+  opacity: .85;
 }
 
 .project .art,
@@ -1664,7 +1733,15 @@ dialog li {
   }
 
   .ambient-bg i,
+  .ambient-bg,
+  .availability span,
+  .hero-title em,
+  .hero-title em::after,
   .hero-stage::before,
+  .stage-copy,
+  .monogram,
+  .orbit,
+  .project::before,
   .art-jdis i,
   .art-cdcrb i,
   .art-av,
