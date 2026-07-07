@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=motion-visible-20260707">
-  <script src="script.js?v=motion-visible-20260707" defer></script>
+  <link rel="stylesheet" href="styles.css?v=local-chatbot-20260707">
+  <script src="script.js?v=local-chatbot-20260707" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Aller au contenu</a>
@@ -121,5 +121,28 @@
   <footer class="footer shell"><span>© <span id="year"></span> Gabriel Emrick Dahissiho</span><span>Abidjan × Cotonou</span><a href="#top">Retour en haut</a></footer>
 
   <dialog id="project-dialog"><button class="dialog-close" aria-label="Fermer">×</button><p id="dialog-role"></p><h2 id="dialog-title"></h2><p id="dialog-intro"></p><ul id="dialog-points"></ul></dialog>
+
+  <section class="mini-chat" aria-live="polite">
+    <button class="chat-toggle" type="button" aria-expanded="false" aria-controls="chat-panel"><span>Ask</span><b></b></button>
+    <div class="chat-panel" id="chat-panel" aria-hidden="true">
+      <div class="chat-head">
+        <div><span>Assistant local</span><strong>Questions rapides</strong></div>
+        <button class="chat-close" type="button" aria-label="Fermer le chatbot">×</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <p class="bot">Bonjour, je peux répondre aux questions classiques sur Gabriel : disponibilité, projets, compétences, contact, parcours ou outils.</p>
+      </div>
+      <div class="chat-suggestions" aria-label="Questions suggérées">
+        <button type="button">Est-il disponible ?</button>
+        <button type="button">Quels projets ?</button>
+        <button type="button">Comment le contacter ?</button>
+      </div>
+      <form class="chat-form" id="chat-form">
+        <label class="sr-only" for="chat-input">Votre question</label>
+        <input id="chat-input" name="question" type="text" autocomplete="off" placeholder="Posez une question…" required>
+        <button type="submit">Envoyer</button>
+      </form>
+    </div>
+  </section>
 </body>
 </html>

@@ -59,6 +59,15 @@ button {
   top: 1rem;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .grain {
   position: fixed;
   inset: 0;
@@ -1317,6 +1326,203 @@ dialog li {
   line-height: 1.6;
 }
 
+.mini-chat {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 210;
+  font-family: Manrope, sans-serif;
+}
+
+.chat-toggle {
+  width: 76px;
+  height: 76px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 18px 55px #17171330;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-toggle span {
+  position: relative;
+  z-index: 2;
+  font: 700 .72rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.chat-toggle b {
+  position: absolute;
+  inset: 9px;
+  border: 1px solid #ffffff55;
+  border-radius: 50%;
+  animation: orbit-turn 7s linear infinite;
+}
+
+.chat-toggle::after {
+  content: "";
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  right: -8px;
+  bottom: -8px;
+}
+
+.chat-panel {
+  position: absolute;
+  right: 0;
+  bottom: 92px;
+  width: min(390px, calc(100vw - 2rem));
+  border: 1px solid var(--line);
+  border-radius: 1.3rem;
+  background: #f7f3ebf2;
+  color: var(--ink);
+  box-shadow: 0 28px 90px #1717132b;
+  backdrop-filter: blur(18px);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(18px) scale(.96);
+  transform-origin: right bottom;
+  pointer-events: none;
+  transition: opacity .28s, transform .32s cubic-bezier(.16, 1, .3, 1);
+}
+
+.mini-chat.open .chat-panel {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.chat-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.chat-head span {
+  display: block;
+  margin-bottom: .25rem;
+  color: #ffffff99;
+  font: .62rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
+
+.chat-head strong {
+  font: 700 1.15rem Syne;
+}
+
+.chat-close {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chat-messages {
+  max-height: 320px;
+  overflow: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+
+.chat-messages p {
+  width: fit-content;
+  max-width: 88%;
+  margin: 0;
+  border-radius: 1rem;
+  padding: .78rem .9rem;
+  font-size: .9rem;
+  line-height: 1.45;
+  animation: chat-pop .24s cubic-bezier(.16, 1, .3, 1);
+}
+
+.chat-messages .bot {
+  align-self: flex-start;
+  background: #e8e2d7;
+}
+
+.chat-messages .user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+}
+
+@keyframes chat-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+  }
+}
+
+.chat-suggestions {
+  display: flex;
+  gap: .45rem;
+  overflow-x: auto;
+  padding: 0 1rem 1rem;
+}
+
+.chat-suggestions button {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  padding: .55rem .75rem;
+  font: 500 .68rem "DM Mono";
+  cursor: pointer;
+}
+
+.chat-suggestions button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .55rem;
+  padding: 1rem;
+  border-top: 1px solid var(--line);
+  background: #f1efe8;
+}
+
+.chat-form input {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff8;
+  color: var(--ink);
+  padding: .85rem 1rem;
+  font: inherit;
+}
+
+.chat-form button {
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  padding: .85rem 1rem;
+  font: 700 .68rem "DM Mono";
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -1706,6 +1912,25 @@ dialog li {
   dialog h2 {
     font-size: 2.1rem;
   }
+
+  .mini-chat {
+    right: .85rem;
+    bottom: .85rem;
+  }
+
+  .chat-toggle {
+    width: 64px;
+    height: 64px;
+  }
+
+  .chat-panel {
+    bottom: 78px;
+    width: calc(100vw - 1.7rem);
+  }
+
+  .chat-messages {
+    max-height: 280px;
+  }
 }
 
 @media (pointer: coarse) {
@@ -1761,6 +1986,7 @@ dialog li {
   .project,
   .expertise-row,
   .expertise-row b,
+  .chat-panel,
   .hero-stage .monogram,
   .hero-stage .orbit {
     transition: none;

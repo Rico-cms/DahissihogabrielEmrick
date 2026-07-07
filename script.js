@@ -189,3 +189,91 @@ document.querySelectorAll("[data-cert-filter]").forEach(button=>button.addEventL
     }
   });
 }));
+
+const miniChat=document.querySelector(".mini-chat");
+const chatToggle=document.querySelector(".chat-toggle");
+const chatPanel=document.querySelector("#chat-panel");
+const chatClose=document.querySelector(".chat-close");
+const chatMessages=document.querySelector("#chat-messages");
+const chatForm=document.querySelector("#chat-form");
+const chatInput=document.querySelector("#chat-input");
+
+function normalizeQuestion(text){
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w\s+@.]/g," ").replace(/\s+/g," ").trim();
+}
+
+function answerQuestion(question){
+  const q=normalizeQuestion(question);
+  if(!q)return "Pose-moi une question sur Gabriel, ses projets, ses compétences ou ses coordonnées.";
+  if(q.includes("bonjour")||q.includes("salut")||q.includes("hello")||q.includes("hey")){
+    return "Bonjour. Je suis l’assistant local du portfolio. Je peux aider à comprendre le profil de Gabriel ou trouver rapidement ses infos de contact.";
+  }
+  if(q.includes("disponible")||q.includes("availability")||q.includes("recrute")||q.includes("mission")||q.includes("freelance")){
+    return "Oui, Gabriel est basé à Abidjan et ouvert à de nouveaux défis autour de la stratégie digitale, du product design, de l’UX/UI et de la transformation opérationnelle.";
+  }
+  if(q.includes("contact")||q.includes("email")||q.includes("mail")||q.includes("telephone")||q.includes("appel")||q.includes("rdv")||q.includes("creneau")){
+    return "Tu peux le contacter par email à dahissihogabriel@gmail.com, par téléphone au +225 05 96 48 93 43, ou réserver un créneau via le bouton de contact du site.";
+  }
+  if(q.includes("projet")||q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")){
+    return "Ses projets couvrent notamment JDIS chez Jalo Logistics, CDCRB, Africaine Vie, Le Petit Nokoué, The Busy Bee School et Lyz Digital. La section Projets permet d’ouvrir chaque cas.";
+  }
+  if(q.includes("competence")||q.includes("expertise")||q.includes("ux")||q.includes("ui")||q.includes("design")||q.includes("branding")||q.includes("strategie")){
+    return "Ses trois grands leviers sont la gestion et transformation digitale, la stratégie UX/UI, et le branding/direction créative.";
+  }
+  if(q.includes("outil")||q.includes("tools")||q.includes("figma")||q.includes("jira")||q.includes("notion")||q.includes("github")||q.includes("adobe")){
+    return "Il travaille avec Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads et ChatGPT.";
+  }
+  if(q.includes("parcours")||q.includes("experience")||q.includes("cv")||q.includes("jalo")||q.includes("saekum")){
+    return "Son parcours mêle project management, UX/UI, direction artistique et product design, avec des expériences chez Jalo Logistics, SÆKUM et Le Petit Nokoué.";
+  }
+  if(q.includes("certification")||q.includes("certificat")||q.includes("diplome")||q.includes("formation")){
+    return "Le site liste 15 certifications visibles dans le Hall of Fame : IA, product management, agile, marketing digital, design web, Git/GitHub et Adobe Photoshop.";
+  }
+  if(q.includes("localisation")||q.includes("ville")||q.includes("abidjan")||q.includes("cotonou")||q.includes("ou est")){
+    return "Gabriel est basé à Abidjan, avec une trajectoire également liée à Cotonou et à des projets en Afrique de l’Ouest.";
+  }
+  if(q.includes("chaos")||q.includes("animation")||q.includes("interactif")){
+    return "Petit indice : clique sur le mot « chaos » dans le hero. Il se désassemble et se recompose en particules.";
+  }
+  return "Je n’ai pas encore de réponse précise à cette question. Essaie plutôt : disponibilité, contact, projets, compétences, parcours, outils ou certifications.";
+}
+
+function addMessage(text,type="bot"){
+  const message=document.createElement("p");
+  message.className=type;
+  message.textContent=text;
+  chatMessages.appendChild(message);
+  chatMessages.scrollTop=chatMessages.scrollHeight;
+}
+
+function askChat(question){
+  addMessage(question,"user");
+  setTimeout(()=>addMessage(answerQuestion(question),"bot"),180);
+}
+
+chatToggle.addEventListener("click",()=>{
+  const opening=!miniChat.classList.contains("open");
+  miniChat.classList.toggle("open",opening);
+  chatToggle.setAttribute("aria-expanded",String(opening));
+  chatPanel.setAttribute("aria-hidden",String(!opening));
+  if(opening)setTimeout(()=>chatInput.focus(),120);
+});
+
+chatClose.addEventListener("click",()=>{
+  miniChat.classList.remove("open");
+  chatToggle.setAttribute("aria-expanded","false");
+  chatPanel.setAttribute("aria-hidden","true");
+  chatToggle.focus();
+});
+
+chatForm.addEventListener("submit",event=>{
+  event.preventDefault();
+  const question=chatInput.value.trim();
+  if(!question)return;
+  chatInput.value="";
+  askChat(question);
+});
+
+document.querySelectorAll(".chat-suggestions button").forEach(button=>button.addEventListener("click",()=>{
+  askChat(button.textContent);
+}));
