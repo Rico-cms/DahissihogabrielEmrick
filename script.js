@@ -20,7 +20,10 @@ dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close()}
 document.querySelector("#year").textContent=new Date().getFullYear();
 if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target)}}),{threshold:.12});
-  document.querySelectorAll(".reveal").forEach(element=>observer.observe(element));
+  document.querySelectorAll(".reveal").forEach((element,index)=>{
+    element.style.setProperty("--reveal-delay",`${Math.min(index%6*.055,.22)}s`);
+    observer.observe(element);
+  });
 }else document.querySelectorAll(".reveal").forEach(element=>element.classList.add("visible"));
 
 const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -29,6 +32,29 @@ addEventListener("scroll",()=>{
   const max=document.documentElement.scrollHeight-innerHeight;
   progress.style.transform=`scaleX(${max>0?scrollY/max:0})`;
 },{passive:true});
+
+if(!reducedMotion){
+  let pointerFrame=null;
+  addEventListener("pointermove",event=>{
+    if(pointerFrame)return;
+    pointerFrame=requestAnimationFrame(()=>{
+      document.body.style.setProperty("--mx",`${event.clientX}px`);
+      document.body.style.setProperty("--my",`${event.clientY}px`);
+      pointerFrame=null;
+    });
+  },{passive:true});
+
+  document.querySelectorAll(".pill,.hero-aside a,.contact-links a,.credential-controls button,.project-more button").forEach(element=>{
+    element.addEventListener("pointermove",event=>{
+      if(matchMedia("(pointer: coarse)").matches)return;
+      const rect=element.getBoundingClientRect();
+      const x=(event.clientX-rect.left)/rect.width-.5;
+      const y=(event.clientY-rect.top)/rect.height-.5;
+      element.style.transform=`translate(${x*8}px,${y*6}px)`;
+    });
+    element.addEventListener("pointerleave",()=>{element.style.transform=""});
+  });
+}
 
 document.querySelectorAll(".expertise-row").forEach(row=>{
   const toggle=()=>{
