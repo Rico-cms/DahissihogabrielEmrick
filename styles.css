@@ -526,22 +526,28 @@ em {
 .statement {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.4rem;
+  gap: 2.2rem;
   padding: 11rem 0;
 }
 
 .statement > div {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 2.75rem;
+  max-width: 100%;
+}
+
+.statement > .index {
+  margin: 0;
 }
 
 .statement h2 {
-  max-width: 940px;
+  max-width: 880px;
+  overflow-wrap: normal;
 }
 
 .statement .body-copy {
-  max-width: 720px;
+  max-width: 680px;
 }
 
 .statement h2,
