@@ -1,5 +1,6 @@
 const ALLOWED_ORIGINS = [
   "https://rico-cms.github.io",
+  "null",
   "http://localhost:8787",
   "http://127.0.0.1:8787"
 ];
@@ -42,38 +43,21 @@ export default {
       return Response.json({ error: "Method not allowed" }, { status: 405, headers });
     }
 
-    if (!env.GROQ_API_KEY) {
-      return Response.json({ error: "Missing GROQ_API_KEY secret" }, { status: 500, headers });
-    }
-
     const { message } = await request.json().catch(() => ({}));
     if (!message || typeof message !== "string" || message.length > 900) {
       return Response.json({ error: "Invalid message" }, { status: 400, headers });
     }
 
-    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${env.GROQ_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
-        temperature: 0.35,
-        max_tokens: 220,
-        messages: [
-          { role: "system", content: PROFILE_CONTEXT },
-          { role: "user", content: message }
-        ]
-      })
+    const aiResponse = await env.AI.run("@cf/meta/llama-3.2-1b-instruct", {
+      messages: [
+        { role: "system", content: PROFILE_CONTEXT },
+        { role: "user", content: message }
+      ],
+      temperature: 0.35,
+      max_tokens: 220
     });
 
-    if (!groqResponse.ok) {
-      return Response.json({ error: "LLM provider error" }, { status: 502, headers });
-    }
-
-    const data = await groqResponse.json();
-    const answer = data.choices?.[0]?.message?.content?.trim() || "Je n'ai pas réussi à répondre clairement.";
+    const answer = aiResponse.response?.trim() || "Je n'ai pas réussi à répondre clairement.";
 
     return Response.json({ answer }, { headers });
   }
