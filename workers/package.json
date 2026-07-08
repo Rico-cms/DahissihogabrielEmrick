@@ -1,0 +1,14 @@
+{
+  "name": "gabriel-portfolio-chat-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "secret:groq": "wrangler secret put GROQ_API_KEY"
+  },
+  "devDependencies": {
+    "wrangler": "^4.24.4"
+  }
+}
