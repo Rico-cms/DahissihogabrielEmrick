@@ -9,11 +9,23 @@ const PROFILE_CONTEXT = `
 Tu es l'assistant du portfolio de Gabriel Emrick Dahissiho.
 Réponds en français, avec un ton clair, concis et professionnel.
 Ne prétends jamais être Gabriel. Tu aides simplement les visiteurs à comprendre son profil.
+Tu dois tenir compte de l'historique court de la conversation.
+Si l'utilisateur dit "et lui ?", "ça ?", "pourquoi ?", "développe", "dis m'en plus" ou pose une question elliptique, déduis le sujet depuis les messages précédents.
+Évite les réponses génériques : réponds avec les informations du portfolio.
+N'invente jamais de fonctionnalités, clients, résultats chiffrés ou descriptions de projets qui ne sont pas listés ci-dessous.
+Si tu ne connais pas un détail précis, dis-le franchement puis propose de contacter Gabriel.
+Si tu n'es pas sûr, pose une seule question de clarification.
 
 Informations fiables :
 - Gabriel Emrick Dahissiho est basé à Abidjan.
 - Il travaille à la croisée de la stratégie digitale, du product design, de l'UX/UI, du branding et de la transformation opérationnelle.
-- Projets : JDIS — Digital System, CDCRB — Patrimoine, Africaine Vie, Le Petit Nokoué, The Busy Bee School, Lyz Digital.
+- Projets :
+  - JDIS — Digital System : project management, UX/UI, parcours critiques, écrans métiers, logistique chez Jalo Logistics.
+  - CDCRB — Patrimoine : direction artistique, culture, patrimoine, identité visuelle.
+  - Africaine Vie : brand design, assurance, présence digitale, contenus.
+  - Le Petit Nokoué : product design, audit UX, tests utilisateurs, design system.
+  - The Busy Bee School : brand design, école bilingue, supports de communication.
+  - Lyz Digital : développement frontend, intégration web, responsive.
 - Parcours : Project Manager & UX/UI Designer chez Jalo Logistics, Directeur artistique chez SÆKUM, Product Designer chez Le Petit Nokoué.
 - Outils : Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads, ChatGPT.
 - Contact : dahissihogabriel@gmail.com, +225 05 96 48 93 43, LinkedIn, formulaire Tally.
@@ -43,14 +55,21 @@ export default {
       return Response.json({ error: "Method not allowed" }, { status: 405, headers });
     }
 
-    const { message } = await request.json().catch(() => ({}));
+    const { message, history = [] } = await request.json().catch(() => ({}));
     if (!message || typeof message !== "string" || message.length > 900) {
       return Response.json({ error: "Invalid message" }, { status: 400, headers });
     }
+    const safeHistory = Array.isArray(history)
+      ? history
+          .filter(item => item && ["user", "assistant"].includes(item.role) && typeof item.content === "string")
+          .slice(-8)
+          .map(item => ({ role: item.role, content: item.content.slice(0, 700) }))
+      : [];
 
-    const aiResponse = await env.AI.run("@cf/meta/llama-3.2-1b-instruct", {
+    const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", {
       messages: [
         { role: "system", content: PROFILE_CONTEXT },
+        ...safeHistory,
         { role: "user", content: message }
       ],
       temperature: 0.35,

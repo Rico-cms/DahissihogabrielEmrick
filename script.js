@@ -198,6 +198,7 @@ const chatMessages=document.querySelector("#chat-messages");
 const chatForm=document.querySelector("#chat-form");
 const chatInput=document.querySelector("#chat-input");
 const LLM_ENDPOINT="https://gabriel-portfolio-chat.dahissihogabriel.workers.dev";
+const chatHistory=[];
 
 function normalizeQuestion(text){
   return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w\s+@.]/g," ").replace(/\s+/g," ").trim();
@@ -214,6 +215,9 @@ function answerQuestion(question){
   }
   if(q.includes("contact")||q.includes("email")||q.includes("mail")||q.includes("telephone")||q.includes("appel")||q.includes("rdv")||q.includes("creneau")){
     return {source:"local",text:"Tu peux le contacter par email à dahissihogabriel@gmail.com, par téléphone au +225 05 96 48 93 43, ou réserver un créneau via le bouton de contact du site."};
+  }
+  if((q.includes("lequel")||q.includes("quel projet")||q.includes("projet"))&&(q.includes("ux")||q.includes("ui")||q.includes("produit")||q.includes("product"))){
+    return {source:"local",text:"Les projets les plus orientés UX/UI sont Le Petit Nokoué, pour l’audit UX et l’évolution du design system, et JDIS, pour la structuration d’écrans métiers et de parcours critiques."};
   }
   if(q.includes("projet")||q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")){
     return {source:"local",text:"Ses projets couvrent notamment JDIS chez Jalo Logistics, CDCRB, Africaine Vie, Le Petit Nokoué, The Busy Bee School et Lyz Digital. La section Projets permet d’ouvrir chaque cas."};
@@ -255,7 +259,10 @@ async function askLlm(question){
   const response=await fetch(LLM_ENDPOINT,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({message:question})
+    body:JSON.stringify({
+      message:question,
+      history:chatHistory.slice(-8)
+    })
   });
   if(!response.ok)throw new Error("LLM request failed");
   const data=await response.json();
@@ -266,6 +273,7 @@ async function askChat(question){
   addMessage(question,"user");
   const answer=answerQuestion(question);
   if(answer.source==="local"){
+    chatHistory.push({role:"user",content:question},{role:"assistant",content:answer.text});
     setTimeout(()=>addMessage(answer.text,"bot"),180);
     return;
   }
@@ -274,10 +282,12 @@ async function askChat(question){
     const llmAnswer=await askLlm(question);
     typing.textContent=llmAnswer;
     typing.className="bot";
+    chatHistory.push({role:"user",content:question},{role:"assistant",content:llmAnswer});
   }catch(error){
     typing.textContent="Le LLM ne répond pas pour le moment. Réessaie plus tard ou pose une question sur les projets, compétences, parcours ou contacts.";
     typing.className="bot";
   }
+  if(chatHistory.length>10)chatHistory.splice(0,chatHistory.length-10);
 }
 
 chatToggle.addEventListener("click",()=>{
