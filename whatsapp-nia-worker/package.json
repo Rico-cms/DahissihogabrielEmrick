@@ -1,0 +1,15 @@
+{
+  "name": "nia-whatsapp-daily-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "secret:whatsapp": "wrangler secret put WHATSAPP_TOKEN",
+    "secret:verify": "wrangler secret put VERIFY_TOKEN"
+  },
+  "devDependencies": {
+    "wrangler": "^4.24.4"
+  }
+}
