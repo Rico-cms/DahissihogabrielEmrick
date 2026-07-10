@@ -213,7 +213,7 @@ function answerQuestion(question){
   const q=normalizeQuestion(question);
   if(!q)return {source:"local",text:"Pose-moi une question sur Gabriel, ses projets, ses compétences ou ses coordonnées."};
   if(q.includes("bonjour")||q.includes("salut")||q.includes("hello")||q.includes("hey")){
-    return {source:"local",text:"Bonjour. Je suis l’assistant local du portfolio. Je peux aider à comprendre le profil de Gabriel ou trouver rapidement ses infos de contact."};
+    return {source:"local",text:"Bonjour, je suis Nia, l’assistant d’Emrick. Je peux aider à comprendre son profil, ses projets, ou répondre à des questions sur la gestion de projet, l’UX/UI, le branding et la stratégie digitale."};
   }
   if(q.includes("disponible")||q.includes("availability")||q.includes("recrute")||q.includes("mission")||q.includes("freelance")){
     return {source:"local",text:"Oui, Gabriel est basé à Abidjan et ouvert à de nouveaux défis autour de la stratégie digitale, du product design, de l’UX/UI et de la transformation opérationnelle."};
