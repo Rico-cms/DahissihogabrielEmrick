@@ -199,6 +199,11 @@ const chatForm=document.querySelector("#chat-form");
 const chatInput=document.querySelector("#chat-input");
 const LLM_ENDPOINT="https://gabriel-portfolio-chat.dahissihogabriel.workers.dev";
 const chatHistory=[];
+const profileIntentWords=["gabriel","emrick","il ","lui","son ","ses ","profil","portfolio","cv","experience","parcours","competence","expertise"];
+
+function isAboutProfile(q){
+  return profileIntentWords.some(word=>q.includes(word));
+}
 
 function normalizeQuestion(text){
   return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w\s+@.]/g," ").replace(/\s+/g," ").trim();
@@ -216,16 +221,16 @@ function answerQuestion(question){
   if(q.includes("contact")||q.includes("email")||q.includes("mail")||q.includes("telephone")||q.includes("appel")||q.includes("rdv")||q.includes("creneau")){
     return {source:"local",text:"Tu peux le contacter par email à dahissihogabriel@gmail.com, par téléphone au +225 05 96 48 93 43, ou réserver un créneau via le bouton de contact du site."};
   }
-  if((q.includes("lequel")||q.includes("quel projet")||q.includes("projet"))&&(q.includes("ux")||q.includes("ui")||q.includes("produit")||q.includes("product"))){
+  if((q.includes("lequel")||q.includes("quel projet")||q.includes("projet"))&&(q.includes("ux")||q.includes("ui")||q.includes("produit")||q.includes("product"))&&isAboutProfile(q)){
     return {source:"local",text:"Les projets les plus orientés UX/UI sont Le Petit Nokoué, pour l’audit UX et l’évolution du design system, et JDIS, pour la structuration d’écrans métiers et de parcours critiques."};
   }
-  if(q.includes("projet")||q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")){
+  if(q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")||(q.includes("projet")&&isAboutProfile(q))){
     return {source:"local",text:"Ses projets couvrent notamment JDIS chez Jalo Logistics, CDCRB, Africaine Vie, Le Petit Nokoué, The Busy Bee School et Lyz Digital. La section Projets permet d’ouvrir chaque cas."};
   }
-  if(q.includes("competence")||q.includes("expertise")||q.includes("ux")||q.includes("ui")||q.includes("design")||q.includes("branding")||q.includes("strategie")){
+  if(q.includes("competence")||q.includes("expertise")||((q.includes("ux")||q.includes("ui")||q.includes("design")||q.includes("branding")||q.includes("strategie"))&&isAboutProfile(q))){
     return {source:"local",text:"Ses trois grands leviers sont la gestion et transformation digitale, la stratégie UX/UI, et le branding/direction créative."};
   }
-  if(q.includes("outil")||q.includes("tools")||q.includes("figma")||q.includes("jira")||q.includes("notion")||q.includes("github")||q.includes("adobe")){
+  if((q.includes("outil")||q.includes("tools")||q.includes("figma")||q.includes("jira")||q.includes("notion")||q.includes("github")||q.includes("adobe"))&&isAboutProfile(q)){
     return {source:"local",text:"Il travaille avec Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads et ChatGPT."};
   }
   if(q.includes("parcours")||q.includes("experience")||q.includes("cv")||q.includes("jalo")||q.includes("saekum")){
