@@ -58,6 +58,28 @@ function corsHeaders(origin) {
   };
 }
 
+function extractAiAnswer(aiResponse) {
+  if (typeof aiResponse?.response === "string" && aiResponse.response.trim()) {
+    return aiResponse.response.trim();
+  }
+  if (typeof aiResponse?.answer === "string" && aiResponse.answer.trim()) {
+    return aiResponse.answer.trim();
+  }
+  const choiceContent = aiResponse?.choices?.[0]?.message?.content;
+  if (typeof choiceContent === "string" && choiceContent.trim()) {
+    return choiceContent.trim();
+  }
+  if (Array.isArray(aiResponse?.output)) {
+    const text = aiResponse.output
+      .flatMap(item => Array.isArray(item.content) ? item.content : [])
+      .map(item => item.text || item.content || "")
+      .join("\n")
+      .trim();
+    if (text) return text;
+  }
+  return "";
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -82,7 +104,7 @@ export default {
           .map(item => ({ role: item.role, content: item.content.slice(0, 700) }))
       : [];
 
-    const aiResponse = await env.AI.run("@cf/meta/llama-3.1-8b-instruct-fp8", {
+    const aiResponse = await env.AI.run("@cf/openai/gpt-oss-120b", {
       messages: [
         { role: "system", content: PROFILE_CONTEXT },
         ...safeHistory,
@@ -92,7 +114,7 @@ export default {
       max_tokens: 220
     });
 
-    const answer = aiResponse.response?.trim() || "Je n'ai pas réussi à répondre clairement.";
+    const answer = extractAiAnswer(aiResponse) || "Je n'ai pas réussi à répondre clairement.";
 
     return Response.json({ answer }, { headers });
   }
