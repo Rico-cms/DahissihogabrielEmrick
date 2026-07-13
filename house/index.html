@@ -55,8 +55,14 @@
     </aside>
 
     <div class="fallback" id="fallback" hidden>
-      <img src="reference-house.jpg" alt="Maison isométrique composée de plusieurs studios de travail créatif et numérique.">
-      <p>La vue 3D n’est pas disponible ou tarde à charger. Tu peux quand même explorer chaque espace avec les boutons ci-dessous.</p>
+      <div class="css-house" aria-hidden="true">
+        <button class="css-room room-management" data-fallback-room="management"><span>Pilotage</span></button>
+        <button class="css-room room-ux" data-fallback-room="ux"><span>UX</span></button>
+        <button class="css-room room-brand" data-fallback-room="brand"><span>Brand</span></button>
+        <button class="css-room room-lab" data-fallback-room="lab"><span>Digital</span></button>
+        <i class="css-stairs"></i>
+      </div>
+      <p>Mode 3D léger activé : explore les pièces de la maison avec les boutons ci-dessous.</p>
       <div class="fallback-rooms" aria-label="Exploration alternative">
         <button data-fallback-room="management">Pilotage & transformation</button>
         <button data-fallback-room="ux">UX & product design</button>

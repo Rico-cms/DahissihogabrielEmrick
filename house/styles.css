@@ -92,10 +92,91 @@ h1 em { color: var(--terracotta); font-style: normal; }
 .project-item small { color: var(--muted); font-size: .7rem; }
 .panel-cta { display: inline-block; margin-top: 2rem; font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; text-decoration: none; border-bottom: 1px solid; padding-bottom: .25rem; }
 
-.fallback { position: fixed; inset: 5rem 0 0; z-index: 6; display: grid; place-items: center; background: var(--paper); padding: 2rem; }
+.fallback { position: fixed; inset: 5rem 0 0; z-index: 6; display: grid; place-items: center; align-content: center; gap: 1.4rem; background: radial-gradient(circle at 50% 35%, rgba(187,101,69,.13), transparent 34rem), var(--paper); padding: 2rem; }
 .fallback[hidden] { display: none; }
-.fallback img { width: min(72rem, 100%); max-height: 72vh; object-fit: contain; }
 .fallback p { max-width: 36rem; text-align: center; color: var(--muted); }
+.css-house {
+  position: relative;
+  width: min(45rem, 88vw);
+  aspect-ratio: 1.45;
+  transform: rotateX(58deg) rotateZ(-38deg);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 44px 60px rgba(35, 29, 20, .18));
+}
+.css-house::before {
+  content: "";
+  position: absolute;
+  inset: 9% 7%;
+  transform: translateZ(-1.2rem);
+  background: #242320;
+  border-radius: 1rem;
+}
+.css-room {
+  position: absolute;
+  border: 1px solid rgba(23,23,19,.18);
+  border-radius: .8rem;
+  background: linear-gradient(135deg, #efe7d8, #c8baa7);
+  box-shadow: inset 0 0 0 .35rem rgba(255,255,255,.22), 0 16px 0 #9f8b75;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform .25s ease, filter .25s ease;
+}
+.css-room::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 1px solid rgba(23,23,19,.16);
+  border-radius: .45rem;
+  background:
+    linear-gradient(90deg, transparent 48%, rgba(23,23,19,.18) 49% 51%, transparent 52%),
+    linear-gradient(0deg, transparent 48%, rgba(23,23,19,.12) 49% 51%, transparent 52%);
+}
+.css-room::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: -1.4rem;
+  height: 1.35rem;
+  transform-origin: bottom;
+  transform: rotateX(-90deg);
+  background: linear-gradient(90deg, #bb6545, #235dca);
+  border-radius: .5rem .5rem 0 0;
+}
+.css-room:hover,
+.css-room:focus-visible {
+  transform: translateZ(1.2rem);
+  filter: saturate(1.2);
+  outline: none;
+}
+.css-room span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotateZ(38deg) rotateX(-58deg);
+  padding: .48rem .65rem;
+  border-radius: 999px;
+  background: rgba(23,23,19,.88);
+  color: #fff;
+  font: 700 .68rem DM Mono, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.room-management { left: 9%; top: 8%; width: 38%; height: 36%; }
+.room-ux { right: 9%; top: 8%; width: 38%; height: 36%; background: linear-gradient(135deg, #efe7d8, #aebad4); }
+.room-brand { left: 9%; bottom: 9%; width: 38%; height: 36%; background: linear-gradient(135deg, #efe7d8, #d8a08b); }
+.room-lab { right: 9%; bottom: 9%; width: 38%; height: 36%; background: linear-gradient(135deg, #efe7d8, #8fa6dd); }
+.css-stairs {
+  position: absolute;
+  left: 46%;
+  top: 43%;
+  width: 8%;
+  height: 18%;
+  background: repeating-linear-gradient(0deg, #242320 0 .35rem, #e7dfd1 .35rem .7rem);
+  transform: translateZ(.5rem);
+  border-radius: .35rem;
+}
 .fallback-rooms {
   display: flex;
   flex-wrap: wrap;
