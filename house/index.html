@@ -57,6 +57,12 @@
     <div class="fallback" id="fallback" hidden>
       <img src="reference-house.jpg" alt="Maison isométrique composée de plusieurs studios de travail créatif et numérique.">
       <p>La vue 3D n’est pas disponible ou tarde à charger. Tu peux quand même explorer chaque espace avec les boutons ci-dessous.</p>
+      <div class="fallback-rooms" aria-label="Exploration alternative">
+        <button data-fallback-room="management">Pilotage & transformation</button>
+        <button data-fallback-room="ux">UX & product design</button>
+        <button data-fallback-room="brand">Branding & identité</button>
+        <button data-fallback-room="lab">Interfaces & prototypage</button>
+      </div>
     </div>
   </main>
 
@@ -117,10 +123,12 @@
 
     document.querySelectorAll('[data-room]').forEach(button => {
       button.addEventListener('click', () => {
-        const canvasUnavailable = document.querySelector('#house-canvas')?.hidden;
-        if (window.__HOUSE_3D_READY && !canvasUnavailable) return;
         updateHouseFallbackPanel(button.dataset.room);
       });
+    });
+
+    document.querySelectorAll('[data-fallback-room]').forEach(button => {
+      button.addEventListener('click', () => updateHouseFallbackPanel(button.dataset.fallbackRoom));
     });
 
     document.querySelector('.panel-close')?.addEventListener('click', () => {
