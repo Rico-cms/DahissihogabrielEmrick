@@ -48,6 +48,8 @@
       </aside>
 
       <section class="house-visual-card" aria-label="Maison interactive">
+        <canvas id="house-canvas" aria-label="Reconstruction procédurale Three.js de la maison"></canvas>
+        <div class="three-status" id="three-status">Construction 3D…</div>
         <img src="reference-house.jpg" alt="Maison isométrique ouverte composée de studios de pilotage, design, création et développement.">
         <button class="hotspot hotspot-management active" data-room="management"><i></i>Pilotage</button>
         <button class="hotspot hotspot-ux" data-room="ux"><i></i>UX</button>
@@ -118,5 +120,14 @@
 
     buttons.forEach(button => button.addEventListener('click', () => selectRoom(button.dataset.room)));
   </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

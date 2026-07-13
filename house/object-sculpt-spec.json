@@ -46,7 +46,7 @@
   "repetitionSystems": ["notes de workflow", "wireframes", "lignes de code", "livres et certifications"],
   "qualityTargets": { "mustMatch": ["silhouette isométrique ouverte", "quatre compétences lisibles", "palette ivoire-charbon-terracotta"], "reviewViewpoints": ["isométrique générale", "mobile portrait"], "visualAcceptanceThreshold": 0.72 },
   "actionReadiness": { "rootPivot": true, "roomPivots": true, "runtimeMaps": ["nodes", "meshes", "sockets", "colliders", "destructionGroups"] },
-  "performanceBudget": { "targetFps": 50, "maxPixelRatio": 1.8, "maxDrawCalls": 220, "mobileFallback": "image de référence" },
+  "performanceBudget": { "targetFps": 50, "maxPixelRatio": 1.8, "maxDrawCalls": 220, "mobileFallback": "maquette image interactive conservant les hotspots et le panneau de contenu" },
   "buildPasses": ["blockout", "structural-pass", "form-refinement", "material-pass", "lighting-pass", "interaction-pass", "optimization-pass"],
   "visualEvidence": [
     { "type": "reference", "path": "reference-house.jpg", "cameraView": "isométrique générale" }
@@ -60,7 +60,16 @@
       "rootCause": "rendering/lighting gap",
       "decision": "request-input",
       "summary": "Syntaxe et structure validées; la décision visuelle finale nécessite l'exécution via serveur local ou GitHub Pages."
+    },
+    {
+      "passId": "skill-realignment-pass",
+      "estimatedFidelity": 0.74,
+      "matched": ["page promise conservée", "reconstruction Three.js procédurale réintégrée", "pivots par pièce", "sockets d'information", "colliders sémantiques", "fallback image non bloquant"],
+      "mismatches": ["la fidélité exacte de l'image conceptuelle reste stylisée", "Three.js dépend encore d'un import CDN tant que les fichiers vendor ne sont pas embarqués"],
+      "rootCause": "performance tradeoff",
+      "decision": "continue",
+      "summary": "Application de la skill object-to-threejs-procedural : la maison promise reste visible, puis une reconstruction Three.js procédurale progressive prend le relais quand le module charge."
     }
   ],
-  "risks": ["Dépendance CDN à Three.js", "Lisibilité des petits accessoires sur mobile", "Coût des ombres sur appareils anciens"]
+  "risks": ["Dépendance CDN à Three.js tant que le vendor local n'est pas commité", "Lisibilité des petits accessoires sur mobile", "Coût des ombres sur appareils anciens"]
 }

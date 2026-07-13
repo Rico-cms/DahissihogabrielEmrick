@@ -221,9 +221,47 @@ h1 em {
   box-shadow: 0 38px 80px rgba(52, 45, 35, .12);
 }
 
+#house-canvas {
+  position: absolute;
+  inset: .65rem;
+  z-index: 2;
+  width: calc(100% - 1.3rem);
+  height: calc(100% - 1.3rem);
+  border-radius: 1.25rem;
+  opacity: 0;
+  transition: opacity .7s ease;
+}
+
+.house-visual-card.three-ready #house-canvas {
+  opacity: 1;
+}
+
+.house-visual-card.three-ready img {
+  opacity: 0;
+}
+
+.three-status {
+  position: absolute;
+  left: 2rem;
+  top: 1.9rem;
+  z-index: 5;
+  padding: .45rem .68rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,.88);
+  color: var(--muted);
+  font: 600 .62rem DM Mono, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.three-status.ready {
+  color: var(--orange);
+}
+
 .house-visual-card img {
   display: block;
   width: 100%;
+  transition: opacity .7s ease;
   border-radius: 1.25rem;
 }
 
@@ -241,6 +279,7 @@ h1 em {
 
 .hotspot {
   position: absolute;
+  z-index: 6;
   display: inline-flex;
   align-items: center;
   gap: .55rem;

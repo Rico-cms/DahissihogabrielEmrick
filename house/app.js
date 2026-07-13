@@ -1,386 +1,269 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+const card = document.querySelector('.house-visual-card');
 const canvas = document.querySelector('#house-canvas');
-const loading = document.querySelector('#loading');
-const fallback = document.querySelector('#fallback');
-const label = document.querySelector('#room-label');
-const panel = document.querySelector('#house-info');
-const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const status = document.querySelector('#three-status');
+const roomButtons = document.querySelectorAll('[data-room]');
 
-const ROOM_DATA = {
-  overview: {
-    index: 'Vue générale', title: 'La maison des systèmes clairs',
-    copy: 'Une lecture spatiale de mon travail : structurer, concevoir, donner une identité et livrer des expériences numériques cohérentes.',
-    projects: [['01', '15+ projets livrés', 'Abidjan × Cotonou'], ['02', 'Trois expertises reliées', 'Stratégie · Produit · Design']]
-  },
-  management: {
-    index: '01 / Bureau de pilotage', title: 'Gestion & transformation digitale',
-    copy: 'Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.',
-    projects: [['01', 'JDIS — Digital System', 'Produit & logistique'], ['02', 'Workflows opérationnels', 'Gouvernance · Coordination']]
-  },
-  ux: {
-    index: '02 / Studio UX', title: 'Stratégie & product design',
-    copy: 'Recherche, architecture de l’information et interfaces : chaque décision part des usages et réduit la friction.',
-    projects: [['01', 'Le Petit Nokoué', 'Audit UX · Design system'], ['02', 'JDIS', 'UX/UI · Expérience logistique']]
-  },
-  brand: {
-    index: '03 / Galerie créative', title: 'Branding & direction créative',
-    copy: 'Des identités reconnaissables, cohérentes et capables de garder leur force sur chaque point de contact.',
-    projects: [['01', 'CDCRB — Patrimoine', 'Culture & identité'], ['02', 'Africaine Vie', 'Assurance & marque'], ['03', 'The Busy Bee School', 'Brand design']]
-  },
-  lab: {
-    index: '04 / Laboratoire digital', title: 'Interfaces & prototypage',
-    copy: 'Je rapproche design et exécution pour produire des interfaces précises, testables et techniquement réalistes.',
-    projects: [['01', 'Lyz Digital', 'Frontend'], ['02', 'Prototypes interactifs', 'Figma · GitHub · IA']]
+if (!card || !canvas) throw new Error('House canvas target missing');
+
+const roomMeta = {
+  management: { color: 0xbb6545, position: [-3.4, 2.7, -1.8] },
+  ux: { color: 0x235dca, position: [3.4, 2.7, -1.8] },
+  brand: { color: 0xbb6545, position: [-3.4, .25, 2.05] },
+  lab: { color: 0x235dca, position: [3.4, .25, 2.05] }
+};
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf2ecdf);
+
+const camera = new THREE.PerspectiveCamera(31, 1.45, .1, 80);
+camera.position.set(12, 9, 13);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.08;
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = .065;
+controls.target.set(0, 2.2, 0);
+controls.enablePan = false;
+controls.minDistance = 10;
+controls.maxDistance = 22;
+controls.maxPolarAngle = Math.PI / 2.12;
+
+const root = new THREE.Group();
+root.rotation.y = -.28;
+root.userData.sculptRuntime = {
+  nodes: {},
+  meshes: {},
+  sockets: {},
+  colliders: {},
+  destructionGroups: {
+    management: ['management-room', 'workflow-wall', 'desk-cluster'],
+    ux: ['ux-room', 'wireframe-wall', 'phone-prototype'],
+    brand: ['brand-room', 'gallery-wall', 'palette-island'],
+    lab: ['lab-room', 'code-wall', 'library-system']
   }
 };
+scene.add(root);
 
-const CAMERA_TARGETS = {
-  overview: { pos: [14, 11, 16], target: [0, 2.2, 0] },
-  management: { pos: [-10, 7, 11], target: [-3.7, 3.8, -1.6] },
-  ux: { pos: [11, 7, 10], target: [3.7, 3.8, -1.4] },
-  brand: { pos: [-10, 5, 10], target: [-3.8, 1.4, 2.2] },
-  lab: { pos: [11, 5, 10], target: [3.8, 1.4, 2.2] }
+const mats = {
+  plaster: material(0xe8dfd0, .86),
+  plasterSide: material(0xc7bba9, .88),
+  charcoal: material(0x181815, .58, .12),
+  wood: material(0xc6a277, .78),
+  woodDark: material(0x8a6144, .82),
+  orange: material(0xbb6545, .58),
+  blue: material(0x235dca, .46, .06),
+  paper: material(0xf0eadf, .94),
+  glass: new THREE.MeshPhysicalMaterial({ color: 0xc7d1cd, roughness: .18, transparent: true, opacity: .45, transmission: .25 })
 };
 
-let scene, camera, renderer, controls, house, raycaster, pointer;
-let activeRoom = 'overview';
-let hoveredRoom = null;
-let cameraGoal = null;
-let targetGoal = null;
-let raf = 0;
-const roomGroups = new Map();
-const interactiveMeshes = [];
+buildLights();
+buildHouse();
+bindRooms();
+resize();
+window.addEventListener('resize', resize);
+card.classList.add('three-ready');
+status.textContent = 'Mode Three.js procédural';
+status.classList.add('ready');
+animate();
 
-try {
-  init();
-  buildHouse();
-  bindUI();
-  resize();
-  window.__HOUSE_3D_READY = true;
-  loading.classList.add('done');
-  animate();
-} catch (error) {
-  console.error(error);
-  window.__HOUSE_3D_READY = false;
-  loading.classList.add('done');
-  fallback.hidden = false;
-  canvas.hidden = true;
-}
-
-function init() {
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf1efe8);
-  scene.fog = new THREE.Fog(0xf1efe8, 22, 42);
-
-  camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, .1, 100);
-  camera.position.set(...CAMERA_TARGETS.overview.pos);
-
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.8));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
-
-  controls = new OrbitControls(camera, canvas);
-  controls.target.set(...CAMERA_TARGETS.overview.target);
-  controls.enableDamping = true;
-  controls.dampingFactor = .055;
-  controls.minDistance = 10;
-  controls.maxDistance = 27;
-  controls.minPolarAngle = .45;
-  controls.maxPolarAngle = Math.PI / 2.05;
-  controls.enablePan = false;
-
-  scene.add(new THREE.HemisphereLight(0xfff7e9, 0x56514a, 2.1));
-  const key = new THREE.DirectionalLight(0xffe4bd, 4.1);
-  key.position.set(-8, 13, 10);
-  key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
-  key.shadow.camera.left = -14; key.shadow.camera.right = 14;
-  key.shadow.camera.top = 14; key.shadow.camera.bottom = -14;
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0xbfd4ff, 1.7);
-  rim.position.set(10, 8, -8);
-  scene.add(rim);
-
-  raycaster = new THREE.Raycaster();
-  pointer = new THREE.Vector2();
-}
-
-function mat(color, roughness = .72, metalness = 0) {
+function material(color, roughness = .7, metalness = 0) {
   return new THREE.MeshStandardMaterial({ color, roughness, metalness });
 }
-const M = {
-  plaster: mat(0xe7dfd1, .86), plasterDark: mat(0xc5bcae, .9),
-  charcoal: mat(0x242320, .55, .1), black: mat(0x11110f, .42, .22),
-  wood: mat(0xa97e59, .76), paleWood: mat(0xc7a57d, .78),
-  terra: mat(0xbb6545, .58), blue: mat(0x235dca, .44, .08),
-  paper: mat(0xeee7d9, .94), green: mat(0x4f6045, .9),
-  glass: new THREE.MeshPhysicalMaterial({ color: 0xbfc9c5, roughness: .15, transmission: .3, transparent: true, opacity: .55 })
-};
 
-function mesh(geometry, material, position, rotation = [0, 0, 0], shadows = true) {
-  const m = new THREE.Mesh(geometry, material);
-  m.position.set(...position);
-  m.rotation.set(...rotation);
-  m.castShadow = shadows;
-  m.receiveShadow = shadows;
-  return m;
+function box(id, size, mat, position, rotation = [0, 0, 0], parent = root) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), mat);
+  mesh.position.set(...position);
+  mesh.rotation.set(...rotation);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.userData.componentId = id;
+  parent.add(mesh);
+  root.userData.sculptRuntime.meshes[id] = mesh;
+  return mesh;
 }
 
-function box(size, material, position, rotation) {
-  return mesh(new THREE.BoxGeometry(...size), material, position, rotation);
+function cyl(id, radiusTop, radiusBottom, height, mat, position, rotation = [0, 0, 0], parent = root, segments = 32) {
+  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments), mat);
+  mesh.position.set(...position);
+  mesh.rotation.set(...rotation);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.userData.componentId = id;
+  parent.add(mesh);
+  root.userData.sculptRuntime.meshes[id] = mesh;
+  return mesh;
 }
 
-function addRoom(id, origin, accent) {
+function makeNode(id, position, parent = root) {
   const group = new THREE.Group();
   group.name = id;
-  group.position.set(...origin);
-  group.userData = { roomId: id, baseY: origin[1], accent };
-  house.add(group);
-  roomGroups.set(id, group);
+  group.position.set(...position);
+  group.userData.baseY = position[1];
+  parent.add(group);
+  root.userData.sculptRuntime.nodes[id] = group;
   return group;
 }
 
-function tagInteractive(object, roomId) {
-  object.traverse(child => {
-    if (!child.isMesh) return;
-    child.userData.roomId = roomId;
-    interactiveMeshes.push(child);
-  });
+function socket(id, position, parent) {
+  const s = new THREE.Object3D();
+  s.name = id;
+  s.position.set(...position);
+  parent.add(s);
+  root.userData.sculptRuntime.sockets[id] = s;
+}
+
+function buildLights() {
+  scene.add(new THREE.HemisphereLight(0xfff4e7, 0x514b45, 2.2));
+  const key = new THREE.DirectionalLight(0xffdfaf, 4.3);
+  key.position.set(-9, 12, 8);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1536, 1536);
+  key.shadow.camera.left = -14;
+  key.shadow.camera.right = 14;
+  key.shadow.camera.top = 14;
+  key.shadow.camera.bottom = -14;
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xb8ceff, 1.5);
+  rim.position.set(10, 8, -9);
+  scene.add(rim);
 }
 
 function buildHouse() {
-  house = new THREE.Group();
-  house.rotation.y = -.08;
-  house.userData.sculptRuntime = { nodes: {}, meshes: {}, sockets: {}, colliders: {}, destructionGroups: {} };
-  scene.add(house);
+  box('charcoal-base', [13.8, .42, 9.8], mats.charcoal, [0, -.25, 0]);
+  box('warm-foundation', [13.2, .22, 9.2], mats.plasterSide, [0, .05, 0]);
+  box('rear-wall', [13.2, 5.2, .22], mats.plaster, [0, 2.7, -4.45]);
+  box('left-wall', [.22, 5.2, 9], mats.plaster, [-6.55, 2.7, 0]);
+  box('right-wall', [.22, 5.2, 9], mats.plaster, [6.55, 2.7, 0]);
+  box('middle-floor-left', [6.25, .22, 4.1], mats.wood, [-3.35, 2.45, -1.8]);
+  box('middle-floor-right', [6.25, .22, 4.1], mats.wood, [3.35, 2.45, -1.8]);
+  box('ground-floor-left', [6.25, .22, 4.1], mats.wood, [-3.35, .05, 2.1]);
+  box('ground-floor-right', [6.25, .22, 4.1], mats.wood, [3.35, .05, 2.1]);
+  box('central-tower', [1.45, 3.8, 1.25], mats.charcoal, [.2, 3.55, -1.7]);
+  box('central-stair-spine', [1.05, .22, 4.9], mats.plasterSide, [.15, 1.35, .3], [-.55, 0, 0]);
 
-  const base = box([13.6, .45, 9.8], M.charcoal, [0, -.15, 0]);
-  house.add(base);
-  house.add(box([12.9, .22, 9.1], M.plasterDark, [0, .19, 0]));
-
-  const floorPositions = [[-3.45, .35, 2.15], [3.45, .35, 2.15], [-3.45, 3.0, -1.8], [3.45, 3.0, -1.8]];
-  floorPositions.forEach((p, i) => house.add(box([6.4, .24, 4.2], i % 2 ? M.paleWood : M.wood, p)));
-
-  const wallSpecs = [
-    [[.22, 5.8, 9], M.plaster, [-6.55, 2.9, 0]],
-    [[.22, 5.8, 9], M.plaster, [6.55, 2.9, 0]],
-    [[13.3, 5.8, .22], M.plaster, [0, 2.9, -4.45]],
-    [[.18, 2.55, 4.15], M.plaster, [0, 1.55, 2.15]],
-    [[.18, 2.55, 4.15], M.plaster, [0, 4.18, -1.8]],
-    [[13.1, .25, .3], M.plaster, [0, 5.85, -4.22]]
-  ];
-  wallSpecs.forEach(([s, material, p]) => house.add(box(s, material, p)));
-
-  const management = addRoom('management', [-3.45, 3.25, -1.75], 0xbb6545);
-  buildManagement(management);
-  const ux = addRoom('ux', [3.45, 3.25, -1.75], 0x235dca);
-  buildUx(ux);
-  const brand = addRoom('brand', [-3.45, .58, 2.15], 0xbb6545);
-  buildBrand(brand);
-  const lab = addRoom('lab', [3.45, .58, 2.15], 0x235dca);
-  buildLab(lab);
-
-  buildStairs();
+  buildRoom('management', buildManagement);
+  buildRoom('ux', buildUx);
+  buildRoom('brand', buildBrand);
+  buildRoom('lab', buildLab);
   buildTerrace();
   buildPlants();
-  buildGround();
-  roomGroups.forEach((group, id) => tagInteractive(group, id));
+
+  const ground = cyl('round-ground', 8.8, 8.8, .08, material(0xded5c7, 1), [0, -.55, 0], [Math.PI / 2, 0, 0], scene, 96);
+  ground.receiveShadow = true;
 }
 
-function buildDesk(group, x, z, width = 3) {
-  group.add(box([width, .15, .9], M.charcoal, [x, .72, z]));
-  group.add(box([.14, .7, .75], M.black, [x - width / 2 + .16, .35, z]));
-  group.add(box([.14, .7, .75], M.black, [x + width / 2 - .16, .35, z]));
+function buildRoom(id, builder) {
+  const group = makeNode(`${id}-room`, roomMeta[id].position);
+  group.userData.roomId = id;
+  group.userData.accent = roomMeta[id].color;
+  builder(group, id);
+  root.userData.sculptRuntime.colliders[id] = { type: 'box', size: [6.2, 2.4, 4.1], node: `${id}-room` };
+  socket(`${id}-info-socket`, [0, 1.45, 0], group);
 }
 
 function buildManagement(g) {
-  buildDesk(g, -.5, .2, 4.2);
-  for (let i = 0; i < 4; i++) {
-    g.add(box([.72, .08, .45], M.black, [-1.75 + i * .84, 1.04, .18], [-.55, 0, 0]));
-  }
-  const board = box([4.6, 1.65, .12], M.charcoal, [-.6, 1.7, -1.98]);
-  g.add(board);
-  const nodes = [[-1.9,1.85],[-1.1,2.1],[-.25,1.55],[.55,2.2],[1.25,1.7]];
-  nodes.forEach((p, i) => g.add(box([.28, .28, .08], i === 3 ? M.blue : M.terra, [p[0], p[1], -2.08])));
-  for (let i = 0; i < 7; i++) g.add(box([.42, .3, .08], i % 3 === 0 ? M.terra : M.paper, [-2.1 + (i % 4) * .62, 1.15 + Math.floor(i / 4) * .42, -2.09]));
-  const table = box([1.6, .8, 1.15], M.plasterDark, [1.7, .42, .15]);
-  g.add(table);
-  g.add(box([1.12, .06, .74], M.blue, [1.7, .85, .15]));
+  box('management-desk', [4.1, .18, .85], mats.charcoal, [-.5, .55, .15], [0, 0, 0], g);
+  box('workflow-wall', [4.4, 1.35, .08], mats.charcoal, [-.55, 1.55, -1.9], [0, 0, 0], g);
+  for (let i = 0; i < 12; i++) box(`workflow-note-${i}`, [.28, .22, .04], i % 3 ? mats.paper : mats.orange, [-2 + (i % 6) * .58, 1.15 + Math.floor(i / 6) * .38, -1.97], [0, 0, (i % 2 ? .08 : -.05)], g);
+  for (let i = 0; i < 4; i++) box(`management-monitor-${i}`, [.65, .08, .42], mats.blue, [-1.75 + i * .85, .88, .05], [-.55, 0, 0], g);
+  box('pilotage-table', [1.35, .62, 1.05], mats.plasterSide, [1.7, .35, .2], [0, 0, 0], g);
 }
 
 function buildUx(g) {
-  buildDesk(g, .5, .25, 3.6);
-  const wall = box([4.75, 1.75, .12], M.plasterDark, [.2, 1.7, -1.98]);
-  g.add(wall);
-  for (let i = 0; i < 6; i++) {
-    const x = -1.55 + (i % 3) * 1.15;
-    const y = 1.32 + Math.floor(i / 3) * .7;
-    g.add(box([.82, .5, .06], M.paper, [x, y, -2.07]));
-  }
-  const phone = new THREE.Group();
-  phone.add(box([.62, 1.25, .12], M.black, [0, 0, 0]));
-  phone.add(box([.5, 1.02, .03], M.blue, [0, 0, .08]));
-  phone.position.set(1.65, 1.78, -2.13);
-  g.add(phone);
-  g.add(box([.75, .06, .5], M.blue, [.35, 1.02, .2], [-.12, 0, 0]));
-  g.add(box([.55, .06, .4], M.paper, [1.25, 1.02, .1], [-.08, 0, 0]));
+  box('ux-wireframe-wall', [4.7, 1.5, .08], mats.plasterSide, [.1, 1.5, -1.9], [0, 0, 0], g);
+  for (let i = 0; i < 8; i++) box(`wireframe-card-${i}`, [.72, .42, .04], mats.paper, [-1.75 + (i % 4) * .9, 1.12 + Math.floor(i / 4) * .55, -1.98], [0, 0, 0], g);
+  box('phone-prototype-body', [.58, 1.12, .11], mats.charcoal, [1.72, 1.55, -2.02], [0, 0, 0], g);
+  box('phone-prototype-screen', [.45, .9, .04], mats.blue, [1.72, 1.55, -1.94], [0, 0, 0], g);
+  box('ux-desk', [3.2, .18, .82], mats.charcoal, [.5, .55, .2], [0, 0, 0], g);
 }
 
 function buildBrand(g) {
-  const counter = box([4.7, .75, .72], M.charcoal, [-.5, .38, -1.38]);
-  g.add(counter);
-  const frames = [[-1.65,.62,1.15],[-.55,.72,1.35],[.65,.68,1.22]];
-  frames.forEach((p, i) => {
-    g.add(box([.92, 1.3, .08], M.paper, [p[0], p[1] + .95, -1.95]));
-    if (i === 0) g.add(mesh(new THREE.CylinderGeometry(.25,.25,.05,32), M.terra, [p[0], p[1]+1.05,-2.02], [Math.PI/2,0,0]));
-    if (i === 1) g.add(box([.42,.42,.04], M.black, [p[0],p[1]+1.06,-2.02], [0,0,.75]));
-    if (i === 2) g.add(box([.5,.22,.04], M.terra, [p[0],p[1]+1.06,-2.02]));
-  });
-  const island = box([2.5, .7, 1.25], M.plasterDark, [.6, .38, .45]);
-  g.add(island);
-  [M.terra, M.blue, M.black, M.paper].forEach((material, i) => g.add(box([.42,.05,.34], material, [-.12 + i*.48, .76, .35])));
-  g.add(mesh(new THREE.SphereGeometry(.34,24,16), M.terra, [-1.2, 1.05, .45]));
-  g.add(box([.12,.62,.12], M.black, [-1.2,.65,.45]));
+  box('gallery-counter', [4.5, .72, .75], mats.charcoal, [-.5, .35, -1.35], [0, 0, 0], g);
+  for (let i = 0; i < 3; i++) {
+    box(`brand-frame-${i}`, [.82, 1.08, .06], mats.paper, [-1.55 + i * 1.15, 1.12, -1.95], [0, 0, 0], g);
+    box(`brand-symbol-${i}`, [.34, .34, .04], i === 1 ? mats.charcoal : mats.orange, [-1.55 + i * 1.15, 1.18, -1.89], [0, 0, i * .42], g);
+  }
+  box('palette-island', [2.45, .58, 1.12], mats.plasterSide, [.65, .32, .35], [0, 0, 0], g);
+  for (let i = 0; i < 5; i++) box(`palette-chip-${i}`, [.33, .05, .26], [mats.orange, mats.blue, mats.charcoal, mats.paper, mats.wood][i], [-.25 + i * .38, .66, .34], [0, 0, 0], g);
 }
 
 function buildLab(g) {
-  buildDesk(g, -.45, .3, 3.2);
-  const screen = box([3.35, 1.45, .14], M.black, [-.45, 1.72, -1.95]);
-  g.add(screen);
-  for (let row = 0; row < 4; row++) {
+  box('code-wall', [3.35, 1.25, .08], mats.charcoal, [-.55, 1.55, -1.95], [0, 0, 0], g);
+  for (let row = 0; row < 5; row++) {
     for (let col = 0; col < 6; col++) {
-      const width = .18 + ((row * 7 + col * 3) % 4) * .07;
-      g.add(box([width, .035, .02], col % 3 === 0 ? M.blue : M.paper, [-1.65 + col*.45, 2.12-row*.25, -2.04]));
+      box(`code-line-${row}-${col}`, [.16 + ((row + col) % 3) * .08, .03, .025], col % 3 ? mats.paper : mats.blue, [-1.65 + col * .44, 1.98 - row * .18, -1.9], [0, 0, 0], g);
     }
   }
-  g.add(box([.82,.06,.55], M.blue, [-.45,1.03,.28], [-.12,0,0]));
-  const shelf = box([1.25, 2.35, .42], M.charcoal, [2.15, 1.18, -1.72]);
-  g.add(shelf);
-  for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
-    g.add(box([.18 + (x%2)*.08, .36, .2], (x+y)%4===0?M.terra:M.paper, [1.78+x*.25, .32+y*.52, -1.45]));
-  }
-}
-
-function buildStairs() {
-  const stair = new THREE.Group();
-  for (let i = 0; i < 8; i++) stair.add(box([1.2, .18, .55], M.paleWood, [.25, .18 + i*.26, 2.8 - i*.42]));
-  stair.position.set(0, .18, -.15);
-  house.add(stair);
+  box('lab-desk', [3.1, .18, .82], mats.charcoal, [-.45, .55, .25], [0, 0, 0], g);
+  for (let i = 0; i < 8; i++) box(`library-book-${i}`, [.16, .58, .42], i % 2 ? mats.woodDark : mats.paper, [1.85 + (i % 4) * .2, .58 + Math.floor(i / 4) * .55, 1.35], [0, 0, 0], g);
 }
 
 function buildTerrace() {
-  const terrace = new THREE.Group();
-  terrace.position.set(3.2, 5.95, -1.6);
-  terrace.add(box([5.6,.18,4.5], M.charcoal, [0,0,0]));
-  terrace.add(mesh(new THREE.CylinderGeometry(.72,.82,.52,32), M.plaster, [.5,.34,.1]));
-  terrace.add(mesh(new THREE.SphereGeometry(.42,24,18), M.terra, [.5,1.12,.1]));
-  terrace.add(box([.1,.65,.1], M.black, [.5,.68,.1]));
-  for (let i=0;i<3;i++) terrace.add(mesh(new THREE.CylinderGeometry(.25,.3,.4,24), i===1?M.terra:M.paleWood, [-.9+i*.75,.3,.85]));
-  house.add(terrace);
+  box('roof-terrace', [4.8, .25, 3.3], mats.charcoal, [3.8, 5.05, -2.2]);
+  box('roof-rail-back', [4.8, .08, .08], mats.charcoal, [3.8, 5.72, -3.85]);
+  box('roof-rail-side', [.08, .08, 3.25], mats.charcoal, [6.2, 5.72, -2.25]);
+  cyl('terrace-sculpture', .32, .36, .72, mats.orange, [3.9, 5.58, -2.2], [0, 0, 0], root, 32);
 }
 
 function buildPlants() {
-  [[-5.45,.25,3.45],[5.35,.25,3.5],[5.2,6.15,-2.6]].forEach(([x,y,z], index) => {
-    const plant = new THREE.Group();
-    plant.add(mesh(new THREE.CylinderGeometry(.28,.38,.6,16), M.charcoal, [0,.3,0]));
-    for(let i=0;i<7;i++) {
-      const leaf = mesh(new THREE.ConeGeometry(.12,.85,8), M.green, [0,.9,0], [0,0,(i-3)*.23]);
-      leaf.rotation.y = i * .9;
+  [[-5.4, .38, 3.4], [5.2, .38, 3.45], [5.55, 5.35, -2.8]].forEach(([x, y, z], index) => {
+    const plant = makeNode(`plant-${index}`, [x, y, z]);
+    cyl(`plant-pot-${index}`, .28, .36, .45, mats.charcoal, [0, .2, 0], [0, 0, 0], plant, 18);
+    for (let i = 0; i < 7; i++) {
+      const leaf = new THREE.Mesh(new THREE.ConeGeometry(.11, .7, 8), material(0x4f6045, .9));
+      leaf.position.set(0, .7, 0);
+      leaf.rotation.set(.45, i * .9, (i - 3) * .24);
+      leaf.castShadow = true;
       plant.add(leaf);
     }
-    plant.position.set(x,y,z);
-    plant.scale.setScalar(index===2?.75:1);
-    house.add(plant);
   });
 }
 
-function buildGround() {
-  const ground = mesh(new THREE.CircleGeometry(18, 64), mat(0xd9d0c0, 1), [0,-.41,0], [-Math.PI/2,0,0]);
-  ground.receiveShadow = true;
-  scene.add(ground);
-  const ring = mesh(new THREE.RingGeometry(8.8, 9, 64), mat(0xbb6545,.8), [0,-.39,0], [-Math.PI/2,0,0]);
-  scene.add(ring);
-}
-
-function bindUI() {
-  addEventListener('resize', resize);
-  canvas.addEventListener('pointermove', onPointerMove);
-  canvas.addEventListener('pointerleave', () => setHover(null));
-  canvas.addEventListener('click', () => { if (hoveredRoom) focusRoom(hoveredRoom); });
-  document.querySelectorAll('[data-room]').forEach(button => button.addEventListener('click', () => focusRoom(button.dataset.room)));
-  document.querySelector('.panel-close').addEventListener('click', () => panel.classList.remove('open'));
-  addEventListener('keydown', event => { if (event.key === 'Escape') { focusRoom('overview'); panel.classList.remove('open'); } });
-}
-
-function onPointerMove(event) {
-  pointer.x = (event.clientX / innerWidth) * 2 - 1;
-  pointer.y = -(event.clientY / innerHeight) * 2 + 1;
-  label.style.left = `${event.clientX}px`;
-  label.style.top = `${event.clientY}px`;
-  raycaster.setFromCamera(pointer, camera);
-  const hit = raycaster.intersectObjects(interactiveMeshes, false)[0];
-  setHover(hit?.object.userData.roomId || null);
-}
-
-function setHover(id) {
-  if (id === hoveredRoom) return;
-  hoveredRoom = id;
-  label.classList.toggle('visible', Boolean(id));
-  if (id) label.textContent = ROOM_DATA[id].index;
-  roomGroups.forEach((group, roomId) => { group.userData.hovered = roomId === id; });
+function bindRooms() {
+  roomButtons.forEach(button => {
+    button.addEventListener('click', () => focusRoom(button.dataset.room));
+  });
 }
 
 function focusRoom(id) {
-  activeRoom = id;
-  const destination = CAMERA_TARGETS[id];
-  cameraGoal = new THREE.Vector3(...destination.pos);
-  targetGoal = new THREE.Vector3(...destination.target);
-  document.querySelectorAll('[data-room]').forEach(button => button.classList.toggle('active', button.dataset.room === id));
-  roomGroups.forEach((group, roomId) => { group.userData.active = id === 'overview' || roomId === id; });
-  updatePanel(id);
-  if (id === 'overview') panel.classList.remove('open'); else panel.classList.add('open');
-}
-
-function updatePanel(id) {
-  const data = ROOM_DATA[id];
-  panel.querySelector('.panel-index').textContent = data.index;
-  panel.querySelector('h2').textContent = data.title;
-  panel.querySelector('.panel-copy').textContent = data.copy;
-  panel.querySelector('.panel-projects').innerHTML = data.projects.map(([n, title, meta]) => `<div class="project-item"><span>${n}</span><div><strong>${title}</strong><small>${meta}</small></div></div>`).join('');
+  const node = root.userData.sculptRuntime.nodes[`${id}-room`];
+  if (!node) return;
+  Object.values(root.userData.sculptRuntime.nodes).forEach(item => {
+    if (item.userData.roomId) item.userData.selected = item.userData.roomId === id;
+  });
+  const target = new THREE.Vector3().setFromMatrixPosition(node.matrixWorld);
+  controls.target.lerp(target, .55);
 }
 
 function resize() {
-  camera.aspect = innerWidth / innerHeight;
+  const rect = card.getBoundingClientRect();
+  const width = Math.max(320, rect.width);
+  const height = Math.max(240, rect.height);
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 700 ? 1.3 : 1.8));
+  renderer.setSize(width, height, false);
 }
 
 function animate(time = 0) {
-  raf = requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
   const t = time * .001;
-  if (cameraGoal) {
-    camera.position.lerp(cameraGoal, reducedMotion ? 1 : .045);
-    controls.target.lerp(targetGoal, reducedMotion ? 1 : .055);
-    if (camera.position.distanceTo(cameraGoal) < .03) { cameraGoal = null; targetGoal = null; }
-  }
-  roomGroups.forEach(group => {
-    const selected = activeRoom !== 'overview' && group.name === activeRoom;
-    const lift = group.userData.hovered ? .14 : selected ? .07 : 0;
-    const scale = group.userData.hovered ? 1.018 : selected ? 1.01 : 1;
-    group.position.y += (group.userData.baseY + lift - group.position.y) * .1;
-    group.scale.setScalar(group.scale.x + (scale - group.scale.x) * .1);
+  root.rotation.y = -.28 + Math.sin(t * .25) * .025;
+  Object.values(root.userData.sculptRuntime.nodes).forEach(node => {
+    if (!node.userData.roomId) return;
+    const lift = node.userData.selected ? .18 : 0;
+    node.position.y += ((node.userData.baseY || 0) + lift - node.position.y) * .08;
+    node.scale.setScalar(node.scale.x + ((node.userData.selected ? 1.035 : 1) - node.scale.x) * .08);
   });
-  if (!reducedMotion && activeRoom === 'overview') house.rotation.y = -.08 + Math.sin(t * .28) * .025;
   controls.update();
   renderer.render(scene, camera);
 }
-
-addEventListener('beforeunload', () => cancelAnimationFrame(raf));
