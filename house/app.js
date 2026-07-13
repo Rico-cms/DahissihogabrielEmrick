@@ -58,10 +58,12 @@ try {
   buildHouse();
   bindUI();
   resize();
+  window.__HOUSE_3D_READY = true;
   loading.classList.add('done');
   animate();
 } catch (error) {
   console.error(error);
+  window.__HOUSE_3D_READY = false;
   loading.classList.add('done');
   fallback.hidden = false;
   canvas.hidden = true;

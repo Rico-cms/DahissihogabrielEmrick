@@ -56,7 +56,7 @@
 
     <div class="fallback" id="fallback" hidden>
       <img src="reference-house.jpg" alt="Maison isométrique composée de plusieurs studios de travail créatif et numérique.">
-      <p>La vue 3D n’est pas disponible sur cet appareil. Explorez les espaces avec les boutons ci-dessous.</p>
+      <p>La vue 3D n’est pas disponible ou tarde à charger. Tu peux quand même explorer chaque espace avec les boutons ci-dessous.</p>
     </div>
   </main>
 
@@ -70,12 +70,72 @@
   </script>
   <script type="module" src="app.js"></script>
   <script>
+    const HOUSE_FALLBACK_DATA = {
+      overview: {
+        index: 'Vue générale',
+        title: 'La maison des systèmes clairs',
+        copy: 'Une lecture spatiale de mon travail, du pilotage à l’expérience finale.',
+        projects: [['01', '15+ projets livrés', 'Abidjan × Cotonou'], ['02', 'Trois expertises reliées', 'Stratégie · Produit · Design']]
+      },
+      management: {
+        index: '01 / Bureau de pilotage',
+        title: 'Gestion & transformation digitale',
+        copy: 'Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.',
+        projects: [['01', 'JDIS — Digital System', 'Produit & logistique'], ['02', 'Workflows opérationnels', 'Gouvernance · Coordination']]
+      },
+      ux: {
+        index: '02 / Studio UX',
+        title: 'Stratégie & product design',
+        copy: 'Recherche, architecture de l’information et interfaces : chaque décision part des usages et réduit la friction.',
+        projects: [['01', 'Le Petit Nokoué', 'Audit UX · Design system'], ['02', 'JDIS', 'UX/UI · Expérience logistique']]
+      },
+      brand: {
+        index: '03 / Galerie créative',
+        title: 'Branding & direction créative',
+        copy: 'Des identités reconnaissables, cohérentes et capables de garder leur force sur chaque point de contact.',
+        projects: [['01', 'CDCRB — Patrimoine', 'Culture & identité'], ['02', 'Africaine Vie', 'Assurance & marque'], ['03', 'The Busy Bee School', 'Brand design']]
+      },
+      lab: {
+        index: '04 / Laboratoire digital',
+        title: 'Interfaces & prototypage',
+        copy: 'Je rapproche design et exécution pour produire des interfaces précises, testables et techniquement réalistes.',
+        projects: [['01', 'Lyz Digital', 'Frontend'], ['02', 'Prototypes interactifs', 'Figma · GitHub · IA']]
+      }
+    };
+
+    function updateHouseFallbackPanel(id) {
+      const data = HOUSE_FALLBACK_DATA[id];
+      const panel = document.querySelector('#house-info');
+      if (!data || !panel) return;
+      panel.querySelector('.panel-index').textContent = data.index;
+      panel.querySelector('h2').textContent = data.title;
+      panel.querySelector('.panel-copy').textContent = data.copy;
+      panel.querySelector('.panel-projects').innerHTML = data.projects.map(([n, title, meta]) => `<div class="project-item"><span>${n}</span><div><strong>${title}</strong><small>${meta}</small></div></div>`).join('');
+      document.querySelectorAll('[data-room]').forEach(button => button.classList.toggle('active', button.dataset.room === id));
+      if (id === 'overview') panel.classList.remove('open'); else panel.classList.add('open');
+    }
+
+    document.querySelectorAll('[data-room]').forEach(button => {
+      button.addEventListener('click', () => {
+        const canvasUnavailable = document.querySelector('#house-canvas')?.hidden;
+        if (window.__HOUSE_3D_READY && !canvasUnavailable) return;
+        updateHouseFallbackPanel(button.dataset.room);
+      });
+    });
+
+    document.querySelector('.panel-close')?.addEventListener('click', () => {
+      if (!window.__HOUSE_3D_READY || document.querySelector('#house-canvas')?.hidden) {
+        document.querySelector('#house-info')?.classList.remove('open');
+      }
+    });
+
     window.setTimeout(() => {
       const loading = document.querySelector('#loading');
       if (!loading || loading.classList.contains('done')) return;
       loading.classList.add('done');
       document.querySelector('#house-canvas').hidden = true;
       document.querySelector('#fallback').hidden = false;
+      updateHouseFallbackPanel('overview');
     }, 8000);
   </script>
 </body>
