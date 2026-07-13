@@ -243,7 +243,10 @@ function answerQuestion(question){
     return {source:"local",text:"Gabriel est basé à Abidjan, avec une trajectoire également liée à Cotonou et à des projets en Afrique de l’Ouest."};
   }
   if(q.includes("chaos")||q.includes("animation")||q.includes("interactif")){
-    return {source:"local",text:"Petit indice : clique sur le mot « chaos » dans le hero. Il se désassemble et se recompose en particules."};
+    return {source:"local",text:"Petit indice : clique sur le mot « chaos » dans le hero. Tu peux aussi entrer dans la Maison 3D pour explorer les compétences comme des pièces et les projets comme des objets."};
+  }
+  if(q.includes("maison")||q.includes("3d")||q.includes("piece")){
+    return {source:"local",text:"La Maison 3D transforme le portfolio en espace interactif : pilotage, UX et produit, branding, puis interfaces et prototypage. Utilise le lien Maison 3D dans la navigation ou la section Portfolio spatial."};
   }
   return {source:"llm",text:"Je n’ai pas de réponse locale précise."};
 }

@@ -1,0 +1,66 @@
+{
+  "targetName": "Maison des compétences de Gabriel Emrick",
+  "schemaVersion": "2.0",
+  "suitability": "conditional",
+  "assumptions": [
+    "Reconstruction stylisée pour navigateur, pas reproduction architecturale exacte.",
+    "Les pièces représentent les compétences et les accessoires représentent les projets.",
+    "Les micro-accessoires de la référence sont simplifiés pour préserver les performances."
+  ],
+  "preSpecAssessment": {
+    "objectClass": ["architectural", "hard-surface", "repeated-structure", "interactive prop"],
+    "complexityTier": "complex",
+    "scores": {
+      "objectIsolation": 3,
+      "silhouetteReadability": 3,
+      "depthInference": 3,
+      "primitiveDecomposition": 3,
+      "materialProcedurality": 3,
+      "occlusionRisk": 2,
+      "interactionFit": 3
+    }
+  },
+  "qualityContract": {
+    "definitionOfDone": "Une maison isométrique lisible en moins de trois secondes, quatre zones interactives distinctes et une navigation exploitable au clavier et sur mobile.",
+    "minimumMacroComponents": 5,
+    "minimumMesoComponents": 16,
+    "requiredFeatureGroups": ["silhouette ouverte", "quatre pièces", "mobilier sémantique", "circulation centrale", "matériaux de marque"],
+    "antiShallowRules": ["Chaque pièce doit avoir un pivot stable et au moins deux accessoires sémantiques.", "La couleur seule ne doit pas être l'unique moyen d'identifier une compétence."]
+  },
+  "coordinateFrame": { "front": "+Z", "up": "+Y", "scaleReference": "largeur de la maison = 13.6 unités" },
+  "silhouette": { "boundingShape": "maison rectangulaire ouverte sur deux niveaux", "aspectRatios": ["1.38:1 empreinte", "2 niveaux + terrasse"], "symmetry": "quasi symétrique avec détails asymétriques", "dominantCurves": ["socle circulaire", "terrasse orthogonale"] },
+  "componentTree": [
+    { "id": "house-root", "level": "macro", "primitiveBase": "group", "actionProfile": { "animationRole": "root", "pivot": "center-of-mass", "collider": "box" } },
+    { "id": "management-room", "parent": "house-root", "level": "macro", "primitiveBase": "box", "localFeatures": ["workflow mural", "table de pilotage", "postes de travail"], "actionProfile": { "animationRole": "articulated", "pivot": "room-center", "transformChannels": ["translate", "material-state"] } },
+    { "id": "ux-room", "parent": "house-root", "level": "macro", "primitiveBase": "box", "localFeatures": ["mur de wireframes", "prototype mobile", "bureau de test"], "actionProfile": { "animationRole": "articulated", "pivot": "room-center", "transformChannels": ["translate", "material-state"] } },
+    { "id": "brand-room", "parent": "house-root", "level": "macro", "primitiveBase": "box", "localFeatures": ["triptyque graphique", "nuancier", "îlot de présentation"], "actionProfile": { "animationRole": "articulated", "pivot": "room-center", "transformChannels": ["translate", "material-state"] } },
+    { "id": "digital-lab", "parent": "house-root", "level": "macro", "primitiveBase": "box", "localFeatures": ["mur de code", "ordinateur", "bibliothèque"], "actionProfile": { "animationRole": "articulated", "pivot": "room-center", "transformChannels": ["translate", "material-state"] } }
+  ],
+  "materials": [
+    { "id": "warm-plaster", "baseColor": "#e7dfd1", "roughness": 0.86, "metalness": 0 },
+    { "id": "charcoal-metal", "baseColor": "#242320", "roughness": 0.55, "metalness": 0.1 },
+    { "id": "pale-wood", "baseColor": "#c7a57d", "roughness": 0.78, "metalness": 0 },
+    { "id": "terracotta-accent", "baseColor": "#bb6545", "roughness": 0.58, "metalness": 0 },
+    { "id": "interface-blue", "baseColor": "#235dca", "roughness": 0.44, "metalness": 0.08 }
+  ],
+  "repetitionSystems": ["notes de workflow", "wireframes", "lignes de code", "livres et certifications"],
+  "qualityTargets": { "mustMatch": ["silhouette isométrique ouverte", "quatre compétences lisibles", "palette ivoire-charbon-terracotta"], "reviewViewpoints": ["isométrique générale", "mobile portrait"], "visualAcceptanceThreshold": 0.72 },
+  "actionReadiness": { "rootPivot": true, "roomPivots": true, "runtimeMaps": ["nodes", "meshes", "sockets", "colliders", "destructionGroups"] },
+  "performanceBudget": { "targetFps": 50, "maxPixelRatio": 1.8, "maxDrawCalls": 220, "mobileFallback": "image de référence" },
+  "buildPasses": ["blockout", "structural-pass", "form-refinement", "material-pass", "lighting-pass", "interaction-pass", "optimization-pass"],
+  "visualEvidence": [
+    { "type": "reference", "path": "reference-house.jpg", "cameraView": "isométrique générale" }
+  ],
+  "reviewHistory": [
+    {
+      "passId": "implementation-static-review",
+      "estimatedFidelity": 0.68,
+      "matched": ["silhouette ouverte", "quatre pièces", "hiérarchie interactive", "palette et éclairage prévus"],
+      "mismatches": ["accessoires volontairement simplifiés", "capture WebGL locale indisponible dans l'environnement courant"],
+      "rootCause": "rendering/lighting gap",
+      "decision": "request-input",
+      "summary": "Syntaxe et structure validées; la décision visuelle finale nécessite l'exécution via serveur local ou GitHub Pages."
+    }
+  ],
+  "risks": ["Dépendance CDN à Three.js", "Lisibilité des petits accessoires sur mobile", "Coût des ombres sur appareils anciens"]
+}

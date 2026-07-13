@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f1efe8">
+  <meta name="description" content="Maison interactive des compétences et projets de Gabriel Emrick Dahissiho.">
+  <title>La maison de Gabriel Emrick</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#house-info">Aller au contenu</a>
+
+  <main class="experience">
+    <header class="topbar">
+      <a class="brand" href="../">
+        <span class="brand-mark">GE</span>
+        <span>Gabriel Emrick</span>
+      </a>
+      <p>Portfolio spatial · 01/05</p>
+      <a class="contact-link" href="mailto:dahissihogabriel@gmail.com">Travaillons ensemble ↗</a>
+    </header>
+
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Entrez dans mon univers</p>
+      <h1 id="page-title">Une maison.<br><em>Plusieurs savoir-faire.</em></h1>
+      <p class="lead">Chaque pièce représente une expertise. Chaque objet raconte un projet livré.</p>
+    </section>
+
+    <section class="viewer" aria-label="Maison 3D interactive">
+      <canvas id="house-canvas"></canvas>
+      <div class="loading" id="loading"><span></span>Construction de la maison…</div>
+      <p class="gesture" id="gesture">Glisser pour tourner · Défiler pour zoomer · Cliquer pour entrer</p>
+      <div class="room-label" id="room-label" aria-hidden="true"></div>
+    </section>
+
+    <nav class="room-nav" aria-label="Visiter les espaces">
+      <button class="active" data-room="overview"><span>00</span>Vue générale</button>
+      <button data-room="management"><span>01</span>Pilotage</button>
+      <button data-room="ux"><span>02</span>UX & produit</button>
+      <button data-room="brand"><span>03</span>Identité</button>
+      <button data-room="lab"><span>04</span>Digital</button>
+    </nav>
+
+    <aside class="info-panel" id="house-info" aria-live="polite">
+      <button class="panel-close" aria-label="Fermer la fiche">×</button>
+      <p class="panel-index">Vue générale</p>
+      <h2>La maison des systèmes clairs</h2>
+      <p class="panel-copy">Une lecture spatiale de mon travail, du pilotage à l’expérience finale.</p>
+      <div class="panel-projects"></div>
+      <a class="panel-cta" href="../#projects">Voir tous les projets ↗</a>
+    </aside>
+
+    <div class="fallback" id="fallback" hidden>
+      <img src="reference-house.jpg" alt="Maison isométrique composée de plusieurs studios de travail créatif et numérique.">
+      <p>La vue 3D n’est pas disponible sur cet appareil. Explorez les espaces avec les boutons ci-dessous.</p>
+    </div>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="app.js"></script>
+  <script>
+    window.setTimeout(() => {
+      const loading = document.querySelector('#loading');
+      if (!loading || loading.classList.contains('done')) return;
+      loading.classList.add('done');
+      document.querySelector('#house-canvas').hidden = true;
+      document.querySelector('#fallback').hidden = false;
+    }, 8000);
+  </script>
+</body>
+</html>
