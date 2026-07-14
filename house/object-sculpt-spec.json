@@ -21,11 +21,11 @@
     }
   },
   "qualityContract": {
-    "definitionOfDone": "Une maison isométrique lisible en moins de trois secondes, quatre zones interactives distinctes et une navigation exploitable au clavier et sur mobile.",
+    "definitionOfDone": "Une maison isométrique lisible en moins de trois secondes, quatre zones interactives distinctes, un mode visite clairement différent de l'aperçu, et une navigation exploitable au clavier et sur mobile.",
     "minimumMacroComponents": 5,
     "minimumMesoComponents": 16,
-    "requiredFeatureGroups": ["silhouette ouverte", "quatre pièces", "mobilier sémantique", "circulation centrale", "matériaux de marque"],
-    "antiShallowRules": ["Chaque pièce doit avoir un pivot stable et au moins deux accessoires sémantiques.", "La couleur seule ne doit pas être l'unique moyen d'identifier une compétence."]
+    "requiredFeatureGroups": ["silhouette ouverte", "quatre pièces", "mobilier sémantique", "circulation centrale", "matériaux de marque", "transition de visite", "panneau narratif par pièce"],
+    "antiShallowRules": ["Chaque pièce doit avoir un pivot stable et au moins deux accessoires sémantiques.", "La couleur seule ne doit pas être l'unique moyen d'identifier une compétence.", "Changer de pièce doit produire une modification spatiale, narrative et sensorielle visible."]
   },
   "coordinateFrame": { "front": "+Z", "up": "+Y", "scaleReference": "largeur de la maison = 13.6 unités" },
   "silhouette": { "boundingShape": "maison rectangulaire ouverte sur deux niveaux", "aspectRatios": ["1.38:1 empreinte", "2 niveaux + terrasse"], "symmetry": "quasi symétrique avec détails asymétriques", "dominantCurves": ["socle circulaire", "terrasse orthogonale"] },
@@ -78,6 +78,15 @@
       "rootCause": "performance tradeoff",
       "decision": "continue",
       "summary": "La visite virtuelle devient continue : chaque pièce dispose d'une narration, d'un savoir-faire guidé, d'un thème visuel et d'un mouvement caméra ciblé."
+    },
+    {
+      "passId": "immersive-visit-state-pass",
+      "estimatedFidelity": 0.86,
+      "matched": ["état visite séparé de l'aperçu", "voile de transition glissant entre pièces", "panneau guide flottant", "immersion/historique/compétence visibles ensemble", "bouton sortie de visite", "fallback image conservé"],
+      "mismatches": ["la promenade reste une cinématique orbitale et non une navigation libre en first-person", "l'audio est généré par synthèse légère sans fichiers ambiants enregistrés"],
+      "rootCause": "intentional interaction scope",
+      "decision": "continue",
+      "summary": "Le concept passe d'une page statique à un parcours : entrer dans la maison déclenche une interface immersive, une transition visuelle entre espaces et un guide contextuel par pièce."
     }
   ],
   "risks": ["Dépendance CDN à Three.js tant que le vendor local n'est pas commité", "Lisibilité des petits accessoires sur mobile", "Coût des ombres sur appareils anciens"]

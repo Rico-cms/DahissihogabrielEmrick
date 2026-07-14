@@ -51,6 +51,7 @@ body[data-room="lab"] {
 button, a { font: inherit; color: inherit; }
 
 .browser-shell {
+  position: relative;
   width: min(110rem, 100%);
   min-height: min(62rem, calc(100svh - 2rem));
   overflow: hidden;
@@ -58,6 +59,66 @@ button, a { font: inherit; color: inherit; }
   border-radius: 1.8rem;
   background: rgba(241, 239, 232, .86);
   box-shadow: var(--shadow);
+  transition: background .7s ease, border-color .7s ease;
+}
+
+.transition-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  transform: translateX(-105%);
+  background:
+    linear-gradient(115deg, rgba(23,23,19,.96), rgba(23,23,19,.84) 42%, rgba(255,75,51,.66));
+  color: #fff;
+}
+
+.transition-veil span {
+  transform: translateY(1rem);
+  opacity: 0;
+  font: 600 .72rem DM Mono, monospace;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+
+.browser-shell.is-transitioning .transition-veil {
+  animation: room-slide 780ms cubic-bezier(.7, 0, .2, 1) both;
+}
+
+.browser-shell.is-transitioning .transition-veil span {
+  animation: room-slide-text 780ms cubic-bezier(.7, 0, .2, 1) both;
+}
+
+@keyframes room-slide {
+  0% { transform: translateX(-105%); }
+  42%, 58% { transform: translateX(0); }
+  100% { transform: translateX(105%); }
+}
+
+@keyframes room-slide-text {
+  0%, 24%, 78%, 100% { opacity: 0; transform: translateY(1rem); }
+  42%, 58% { opacity: 1; transform: translateY(0); }
+}
+
+.browser-shell.tour-active {
+  background: color-mix(in srgb, var(--paper), var(--room-glow, rgba(255,75,51,.16)) 28%);
+  border-color: color-mix(in srgb, var(--room-accent, var(--orange)), transparent 62%);
+}
+
+.browser-shell.tour-active .browser-chrome {
+  height: 3.8rem;
+}
+
+.browser-shell.tour-active .site-top {
+  padding-block: 1rem;
+}
+
+.browser-shell.tour-active .site-top nav a:not(.active),
+.browser-shell.tour-active .contact-pill {
+  opacity: .45;
+}
 }
 
 .browser-chrome {
@@ -158,6 +219,36 @@ button, a { font: inherit; color: inherit; }
   gap: clamp(3rem, 6vw, 6.4rem);
   align-items: center;
   padding: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 4vw, 3.4rem) 3rem;
+  transition: grid-template-columns .7s ease, gap .7s ease, padding .7s ease;
+}
+
+.browser-shell.tour-active .house-layout {
+  grid-template-columns: minmax(17rem, 25rem) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3vw, 3rem);
+  align-items: stretch;
+  padding-top: clamp(1rem, 2vw, 1.8rem);
+  padding-bottom: 9rem;
+}
+
+.browser-shell.tour-active .house-copy {
+  align-self: end;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--room-accent, var(--orange)), transparent 62%);
+  border-radius: 1.4rem;
+  background: rgba(255,255,255,.32);
+  backdrop-filter: blur(18px);
+}
+
+.browser-shell.tour-active .house-copy .lead {
+  margin-bottom: 1.2rem;
+}
+
+.browser-shell.tour-active .eyebrow {
+  margin-bottom: 1rem;
+}
+
+.browser-shell.tour-active h1 {
+  font-size: clamp(2.9rem, 4.8vw, 5rem);
 }
 
 .eyebrow {
@@ -241,11 +332,30 @@ h1 em {
   border-radius: 1.8rem;
   background: linear-gradient(135deg, rgba(255,255,255,.5), rgba(212,201,183,.42));
   box-shadow: 0 38px 80px rgba(52, 45, 35, .12);
-  transition: box-shadow .65s ease, background .65s ease;
+  transition: box-shadow .65s ease, background .65s ease, transform .7s ease, min-height .7s ease;
 }
 
 body[data-room] .house-visual-card {
   box-shadow: 0 44px 90px var(--room-glow), 0 38px 80px rgba(52, 45, 35, .12);
+}
+
+.browser-shell.tour-active .house-visual-card {
+  min-height: clamp(34rem, 58vw, 48rem);
+  transform: translateY(-.35rem) scale(1.018);
+}
+
+.browser-shell.tour-active .house-visual-card::after {
+  content: "";
+  position: absolute;
+  inset: .65rem;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 52% 44%, transparent 0 24%, rgba(23,23,19,.2) 72%),
+    linear-gradient(180deg, transparent 58%, rgba(23,23,19,.36));
+  opacity: .46;
+  mix-blend-mode: multiply;
 }
 
 #house-canvas {
@@ -292,16 +402,25 @@ body[data-room] .house-visual-card {
   border-radius: 1.25rem;
 }
 
+.browser-shell.tour-active .house-visual-card img {
+  height: calc(100% - 1.3rem);
+  min-height: 32rem;
+  object-fit: cover;
+}
+
 .house-visual-card > p {
   position: absolute;
   right: 2.3rem;
   bottom: 1.95rem;
+  z-index: 7;
   margin: 0;
   color: #fff;
   text-shadow: 0 2px 12px rgba(0,0,0,.38);
   font: 500 .72rem DM Mono, monospace;
   letter-spacing: .18em;
   text-transform: uppercase;
+  max-width: min(30rem, 64%);
+  text-align: right;
 }
 
 .hotspot {
@@ -356,11 +475,23 @@ body[data-room] .house-visual-card {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   scroll-margin-top: 2rem;
-  transition: border-color .45s ease;
+  transition: border-color .45s ease, margin .7s ease, padding .7s ease, background .7s ease, box-shadow .7s ease, transform .7s ease;
 }
 
 body[data-room] .room-panel {
   border-top-color: color-mix(in srgb, var(--room-accent), transparent 45%);
+}
+
+.browser-shell.tour-active .room-panel {
+  position: relative;
+  z-index: 12;
+  margin: -8.25rem clamp(2rem, 4vw, 3.4rem) 2.2rem;
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--room-accent, var(--orange)), transparent 58%);
+  border-radius: 1.35rem;
+  background: rgba(246, 242, 233, .74);
+  box-shadow: 0 24px 60px rgba(23,23,19,.16);
+  backdrop-filter: blur(20px);
 }
 
 .room-panel.pulse {
@@ -390,6 +521,28 @@ body[data-room] .room-panel {
   margin: 1rem 0 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.room-ambience {
+  margin: 1.15rem 0 0;
+  padding: .9rem 1rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--room-accent, var(--orange)), transparent 88%);
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.room-ambience span {
+  display: block;
+  margin-bottom: .35rem;
+  color: var(--room-accent, var(--orange));
+  font: 700 .58rem DM Mono, monospace;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.room-ambience strong {
+  font-weight: 600;
 }
 
 .room-story,
@@ -500,8 +653,13 @@ body[data-room] .room-panel {
   .site-top { grid-template-columns: 1fr auto; padding: 1rem; }
   .site-top nav { display: none; }
   .house-layout { grid-template-columns: 1fr; padding: 2rem 1rem; gap: 2rem; }
+  .browser-shell.tour-active .house-layout { grid-template-columns: 1fr; padding: 1rem 1rem 5rem; }
+  .browser-shell.tour-active .house-copy { order: 2; }
+  .browser-shell.tour-active .house-visual-card { min-height: 28rem; order: 1; }
+  .browser-shell.tour-active .house-visual-card img { min-height: 26rem; }
   h1 { font-size: clamp(3rem, 17vw, 5rem); }
   .room-panel { grid-template-columns: 1fr; margin: 0 1rem 2rem; gap: 1rem; }
+  .browser-shell.tour-active .room-panel { margin: -3.5rem 1rem 2rem; }
   .panel-projects { grid-column: auto; }
   .house-footer { padding-inline: 1rem; }
 }

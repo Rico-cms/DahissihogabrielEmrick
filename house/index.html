@@ -12,7 +12,10 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="browser-shell">
+  <main class="browser-shell" data-visit-state="overview">
+    <div class="transition-veil" aria-hidden="true">
+      <span>Déplacement vers la pièce</span>
+    </div>
     <div class="browser-chrome" aria-hidden="true">
       <span></span><span></span><span></span>
       <p>rico-cms.github.io / portfolio / maison</p>
@@ -60,10 +63,11 @@
     </section>
 
     <section class="room-panel" id="room-panel" aria-live="polite">
-      <div>
+      <div class="room-identity">
         <p class="panel-index">01 / Bureau de pilotage</p>
         <h2>Gestion & transformation digitale</h2>
         <p class="panel-copy">Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.</p>
+        <p class="room-ambience"><span>Immersion</span><strong>Tableaux noirs, notes en mouvement, lumière chaude de salle projet.</strong></p>
       </div>
       <article class="room-story">
         <span>Historique</span>
@@ -81,6 +85,7 @@
         <button type="button" data-tour-prev>← Pièce précédente</button>
         <button type="button" data-audio-toggle aria-pressed="false">Ambiance sonore</button>
         <button type="button" data-tour-next>Pièce suivante →</button>
+        <button type="button" data-exit-tour>Sortir de la visite</button>
       </div>
     </section>
 
@@ -98,7 +103,7 @@
         copy: 'Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.',
         story: 'Cette pièce naît des projets où il fallait remettre de l’ordre dans le mouvement : équipes, délais, outils, responsabilités et décisions.',
         skill: 'Pilotage de workflow : transformer un objectif flou en séquence claire, assignable et mesurable.',
-        ambience: 'tableaux noirs, notes en mouvement, lumière chaude de salle projet',
+        ambience: 'Tableaux noirs, notes en mouvement, lumière chaude de salle projet.',
         projects: [['01', 'JDIS — Digital System', 'Produit & logistique'], ['02', 'Workflows opérationnels', 'Gouvernance · Coordination']]
       },
       ux: {
@@ -107,7 +112,7 @@
         copy: 'Recherche, architecture de l’information et interfaces : chaque décision part des usages et réduit la friction.',
         story: 'Le studio UX vient des moments où le terrain contredit les hypothèses. Ici, les usages réels deviennent plans, parcours et prototypes.',
         skill: 'Product design : observer, structurer les besoins, prototyper vite puis réduire les frictions avant de livrer.',
-        ambience: 'surface bleutée, cartes de parcours, prototypes et faible pulsation numérique',
+        ambience: 'Surface bleutée, cartes de parcours, prototypes et faible pulsation numérique.',
         projects: [['01', 'Le Petit Nokoué', 'Audit UX · Design system'], ['02', 'JDIS', 'UX/UI · Expérience logistique']]
       },
       brand: {
@@ -116,7 +121,7 @@
         copy: 'Des identités reconnaissables, cohérentes et capables de garder leur force sur chaque point de contact.',
         story: 'La galerie vient du besoin de donner une présence claire aux institutions, écoles et marques : une voix, un rythme, une mémoire visuelle.',
         skill: 'Direction créative : établir un langage visuel cohérent, du signe initial jusqu’aux supports de communication.',
-        ambience: 'terracotta, cadres, matière papier, silence de galerie et détails graphiques',
+        ambience: 'Terracotta, cadres, matière papier, silence de galerie et détails graphiques.',
         projects: [['01', 'CDCRB — Patrimoine', 'Culture & identité'], ['02', 'Africaine Vie', 'Assurance & marque'], ['03', 'The Busy Bee School', 'Brand design']]
       },
       lab: {
@@ -125,22 +130,45 @@
         copy: 'Je rapproche design et exécution pour produire des interfaces précises, testables et techniquement réalistes.',
         story: 'Le laboratoire représente l’endroit où les idées arrêtent d’être abstraites : elles deviennent écrans, interactions, composants et preuves.',
         skill: 'Prototypage digital : passer d’une intention design à une interface testable, responsive et compréhensible par les développeurs.',
-        ambience: 'lueurs bleues, lignes de code, bibliothèque technique et énergie de prototype',
+        ambience: 'Lueurs bleues, lignes de code, bibliothèque technique et énergie de prototype.',
         projects: [['01', 'Lyz Digital', 'Frontend'], ['02', 'Prototypes interactifs', 'Figma · GitHub · IA']]
       }
     };
 
     const panel = document.querySelector('#room-panel');
+    const shell = document.querySelector('.browser-shell');
     const buttons = document.querySelectorAll('[data-room]');
     const roomOrder = ['management', 'ux', 'brand', 'lab'];
     let activeRoom = 'management';
     let audioEnabled = false;
     let audioContext;
     let drone;
+    let transitionTimer;
 
-    function selectRoom(id) {
+    function enterTour() {
+      shell.classList.add('tour-active');
+      shell.dataset.visitState = 'immersive';
+    }
+
+    function exitTour() {
+      shell.classList.remove('tour-active', 'is-transitioning');
+      shell.dataset.visitState = 'overview';
+    }
+
+    function travelTo(id) {
+      shell.dataset.travelTo = id;
+      shell.classList.remove('is-transitioning');
+      void shell.offsetWidth;
+      shell.classList.add('is-transitioning');
+      clearTimeout(transitionTimer);
+      transitionTimer = window.setTimeout(() => shell.classList.remove('is-transitioning'), 780);
+    }
+
+    function selectRoom(id, options = {}) {
       const room = rooms[id];
       if (!room) return;
+      if (options.activateTour) enterTour();
+      if (id !== activeRoom || options.activateTour) travelTo(id);
       activeRoom = id;
       document.body.dataset.room = id;
       document.querySelector('.panel-index').textContent = room.index;
@@ -148,28 +176,31 @@
       panel.querySelector('.panel-copy').textContent = room.copy;
       panel.querySelector('.room-story p').textContent = room.story;
       panel.querySelector('.room-skill p').textContent = room.skill;
-      document.querySelector('.visual-caption').textContent = room.ambience;
+      panel.querySelector('.room-ambience strong').textContent = room.ambience;
+      document.querySelector('.visual-caption').textContent = options.activateTour ? `Vous êtes dans la pièce · ${room.index.slice(0, 2)}` : 'Explorer l’espace';
       panel.querySelector('.panel-projects').innerHTML = room.projects.map(([n, title, meta]) => `<div><span>${n}</span><strong>${title}</strong><small>${meta}</small></div>`).join('');
       buttons.forEach(button => button.classList.toggle('active', button.dataset.room === id));
       panel.classList.remove('pulse');
       requestAnimationFrame(() => panel.classList.add('pulse'));
       window.dispatchEvent(new CustomEvent('house-room-change', { detail: { id } }));
       if (audioEnabled) updateAmbience(id);
+      if (options.scroll) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    buttons.forEach(button => button.addEventListener('click', () => selectRoom(button.dataset.room)));
-    document.querySelector('[data-enter-tour]').addEventListener('click', () => {
-      selectRoom(activeRoom);
-      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    buttons.forEach(button => button.addEventListener('click', () => selectRoom(button.dataset.room, { activateTour: true })));
+    document.querySelector('[data-enter-tour]').addEventListener('click', event => {
+      event.preventDefault();
+      selectRoom(activeRoom, { activateTour: true, scroll: true });
     });
     document.querySelector('[data-tour-prev]').addEventListener('click', () => {
       const index = roomOrder.indexOf(activeRoom);
-      selectRoom(roomOrder[(index - 1 + roomOrder.length) % roomOrder.length]);
+      selectRoom(roomOrder[(index - 1 + roomOrder.length) % roomOrder.length], { activateTour: true });
     });
     document.querySelector('[data-tour-next]').addEventListener('click', () => {
       const index = roomOrder.indexOf(activeRoom);
-      selectRoom(roomOrder[(index + 1) % roomOrder.length]);
+      selectRoom(roomOrder[(index + 1) % roomOrder.length], { activateTour: true });
     });
+    document.querySelector('[data-exit-tour]').addEventListener('click', exitTour);
     document.querySelector('[data-audio-toggle]').addEventListener('click', async event => {
       audioEnabled = !audioEnabled;
       event.currentTarget.setAttribute('aria-pressed', String(audioEnabled));
