@@ -9,10 +9,10 @@ const roomButtons = document.querySelectorAll('[data-room]');
 if (!card || !canvas) throw new Error('House canvas target missing');
 
 const roomMeta = {
-  management: { color: 0xbb6545, position: [-3.4, 2.7, -1.8] },
-  ux: { color: 0x235dca, position: [3.4, 2.7, -1.8] },
-  brand: { color: 0xbb6545, position: [-3.4, .25, 2.05] },
-  lab: { color: 0x235dca, position: [3.4, .25, 2.05] }
+  management: { color: 0xbb6545, position: [-3.4, 2.7, -1.8], camera: [-7.5, 5.7, 5.8], target: [-3.4, 3.2, -1.7] },
+  ux: { color: 0x235dca, position: [3.4, 2.7, -1.8], camera: [7.6, 5.8, 5.9], target: [3.35, 3.15, -1.7] },
+  brand: { color: 0xbb6545, position: [-3.4, .25, 2.05], camera: [-7.4, 3.7, 7.4], target: [-3.35, .9, 2.05] },
+  lab: { color: 0x235dca, position: [3.4, .25, 2.05], camera: [7.5, 3.8, 7.3], target: [3.35, .9, 2.05] }
 };
 
 const scene = new THREE.Scene();
@@ -20,6 +20,9 @@ scene.background = new THREE.Color(0xf2ecdf);
 
 const camera = new THREE.PerspectiveCamera(31, 1.45, .1, 80);
 camera.position.set(12, 9, 13);
+const cameraGoal = new THREE.Vector3(12, 9, 13);
+const targetGoal = new THREE.Vector3(0, 2.2, 0);
+let activeRoom = 'management';
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
@@ -71,10 +74,12 @@ buildHouse();
 bindRooms();
 resize();
 window.addEventListener('resize', resize);
+window.addEventListener('house-room-change', event => focusRoom(event.detail?.id));
 card.classList.add('three-ready');
 status.textContent = 'Mode Three.js procédural';
 status.classList.add('ready');
 animate();
+focusRoom(activeRoom);
 
 function material(color, roughness = .7, metalness = 0) {
   return new THREE.MeshStandardMaterial({ color, roughness, metalness });
@@ -236,13 +241,15 @@ function bindRooms() {
 }
 
 function focusRoom(id) {
+  if (!roomMeta[id]) return;
+  activeRoom = id;
   const node = root.userData.sculptRuntime.nodes[`${id}-room`];
   if (!node) return;
   Object.values(root.userData.sculptRuntime.nodes).forEach(item => {
     if (item.userData.roomId) item.userData.selected = item.userData.roomId === id;
   });
-  const target = new THREE.Vector3().setFromMatrixPosition(node.matrixWorld);
-  controls.target.lerp(target, .55);
+  cameraGoal.set(...roomMeta[id].camera);
+  targetGoal.set(...roomMeta[id].target);
 }
 
 function resize() {
@@ -257,7 +264,10 @@ function resize() {
 function animate(time = 0) {
   requestAnimationFrame(animate);
   const t = time * .001;
-  root.rotation.y = -.28 + Math.sin(t * .25) * .025;
+  const travelling = camera.position.distanceTo(cameraGoal) > .05;
+  root.rotation.y += ((travelling ? -.2 : -.28 + Math.sin(t * .25) * .025) - root.rotation.y) * .04;
+  camera.position.lerp(cameraGoal, .045);
+  controls.target.lerp(targetGoal, .06);
   Object.values(root.userData.sculptRuntime.nodes).forEach(node => {
     if (!node.userData.roomId) return;
     const lift = node.userData.selected ? .18 : 0;

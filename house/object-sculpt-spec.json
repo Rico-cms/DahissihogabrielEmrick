@@ -69,6 +69,15 @@
       "rootCause": "performance tradeoff",
       "decision": "continue",
       "summary": "Application de la skill object-to-threejs-procedural : la maison promise reste visible, puis une reconstruction Three.js procédurale progressive prend le relais quand le module charge."
+    },
+    {
+      "passId": "interaction-immersion-pass",
+      "estimatedFidelity": 0.8,
+      "matched": ["transition caméra fluide entre pièces", "état visuel par pièce", "historique narratif", "encart compétence", "ambiance sonore procédurale optionnelle", "pivots et sockets conservés"],
+      "mismatches": ["l'ambiance sonore reste synthétique et volontairement légère", "la marche physique dans les pièces est stylisée par glissement caméra plutôt qu'en first-person"],
+      "rootCause": "performance tradeoff",
+      "decision": "continue",
+      "summary": "La visite virtuelle devient continue : chaque pièce dispose d'une narration, d'un savoir-faire guidé, d'un thème visuel et d'un mouvement caméra ciblé."
     }
   ],
   "risks": ["Dépendance CDN à Three.js tant que le vendor local n'est pas commité", "Lisibilité des petits accessoires sur mobile", "Coût des ombres sur appareils anciens"]

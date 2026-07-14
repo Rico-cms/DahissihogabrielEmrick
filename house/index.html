@@ -44,7 +44,7 @@
           <button data-room="lab"><span>04</span>Interfaces & prototypage</button>
         </nav>
 
-        <a class="enter-button" href="#room-panel">Visiter la maison en 3D <span>Entrer ↗</span></a>
+        <a class="enter-button" href="#room-panel" data-enter-tour>Visiter la maison en 3D <span>Entrer ↗</span></a>
       </aside>
 
       <section class="house-visual-card" aria-label="Maison interactive">
@@ -55,17 +55,32 @@
         <button class="hotspot hotspot-ux" data-room="ux"><i></i>UX</button>
         <button class="hotspot hotspot-brand" data-room="brand"><i></i>Brand</button>
         <button class="hotspot hotspot-lab" data-room="lab"><i></i>Digital</button>
-        <p>Explorer l’espace</p>
+        <p class="visual-caption">Explorer l’espace</p>
       </section>
     </section>
 
     <section class="room-panel" id="room-panel" aria-live="polite">
-      <p class="panel-index">01 / Bureau de pilotage</p>
-      <h2>Gestion & transformation digitale</h2>
-      <p class="panel-copy">Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.</p>
-      <div class="panel-projects">
+      <div>
+        <p class="panel-index">01 / Bureau de pilotage</p>
+        <h2>Gestion & transformation digitale</h2>
+        <p class="panel-copy">Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.</p>
+      </div>
+      <article class="room-story">
+        <span>Historique</span>
+        <p>Cette pièce naît des projets où il fallait remettre de l’ordre dans le mouvement : équipes, délais, outils, responsabilités et décisions.</p>
+      </article>
+      <article class="room-skill">
+        <span>Compétence guidée</span>
+        <p>Pilotage de workflow : transformer un objectif flou en séquence claire, assignable et mesurable.</p>
+      </article>
+      <div class="panel-projects" aria-label="Objets et projets associés">
         <div><span>01</span><strong>JDIS — Digital System</strong><small>Produit & logistique</small></div>
         <div><span>02</span><strong>Workflows opérationnels</strong><small>Gouvernance · Coordination</small></div>
+      </div>
+      <div class="tour-controls">
+        <button type="button" data-tour-prev>← Pièce précédente</button>
+        <button type="button" data-audio-toggle aria-pressed="false">Ambiance sonore</button>
+        <button type="button" data-tour-next>Pièce suivante →</button>
       </div>
     </section>
 
@@ -81,44 +96,130 @@
         index: '01 / Bureau de pilotage',
         title: 'Gestion & transformation digitale',
         copy: 'Je transforme des objectifs complexes en responsabilités lisibles, workflows pilotables et livraisons concrètes.',
+        story: 'Cette pièce naît des projets où il fallait remettre de l’ordre dans le mouvement : équipes, délais, outils, responsabilités et décisions.',
+        skill: 'Pilotage de workflow : transformer un objectif flou en séquence claire, assignable et mesurable.',
+        ambience: 'tableaux noirs, notes en mouvement, lumière chaude de salle projet',
         projects: [['01', 'JDIS — Digital System', 'Produit & logistique'], ['02', 'Workflows opérationnels', 'Gouvernance · Coordination']]
       },
       ux: {
         index: '02 / Studio UX',
         title: 'Stratégie & product design',
         copy: 'Recherche, architecture de l’information et interfaces : chaque décision part des usages et réduit la friction.',
+        story: 'Le studio UX vient des moments où le terrain contredit les hypothèses. Ici, les usages réels deviennent plans, parcours et prototypes.',
+        skill: 'Product design : observer, structurer les besoins, prototyper vite puis réduire les frictions avant de livrer.',
+        ambience: 'surface bleutée, cartes de parcours, prototypes et faible pulsation numérique',
         projects: [['01', 'Le Petit Nokoué', 'Audit UX · Design system'], ['02', 'JDIS', 'UX/UI · Expérience logistique']]
       },
       brand: {
         index: '03 / Galerie créative',
         title: 'Branding & direction créative',
         copy: 'Des identités reconnaissables, cohérentes et capables de garder leur force sur chaque point de contact.',
+        story: 'La galerie vient du besoin de donner une présence claire aux institutions, écoles et marques : une voix, un rythme, une mémoire visuelle.',
+        skill: 'Direction créative : établir un langage visuel cohérent, du signe initial jusqu’aux supports de communication.',
+        ambience: 'terracotta, cadres, matière papier, silence de galerie et détails graphiques',
         projects: [['01', 'CDCRB — Patrimoine', 'Culture & identité'], ['02', 'Africaine Vie', 'Assurance & marque'], ['03', 'The Busy Bee School', 'Brand design']]
       },
       lab: {
         index: '04 / Laboratoire digital',
         title: 'Interfaces & prototypage',
         copy: 'Je rapproche design et exécution pour produire des interfaces précises, testables et techniquement réalistes.',
+        story: 'Le laboratoire représente l’endroit où les idées arrêtent d’être abstraites : elles deviennent écrans, interactions, composants et preuves.',
+        skill: 'Prototypage digital : passer d’une intention design à une interface testable, responsive et compréhensible par les développeurs.',
+        ambience: 'lueurs bleues, lignes de code, bibliothèque technique et énergie de prototype',
         projects: [['01', 'Lyz Digital', 'Frontend'], ['02', 'Prototypes interactifs', 'Figma · GitHub · IA']]
       }
     };
 
     const panel = document.querySelector('#room-panel');
     const buttons = document.querySelectorAll('[data-room]');
+    const roomOrder = ['management', 'ux', 'brand', 'lab'];
+    let activeRoom = 'management';
+    let audioEnabled = false;
+    let audioContext;
+    let drone;
 
     function selectRoom(id) {
       const room = rooms[id];
       if (!room) return;
+      activeRoom = id;
+      document.body.dataset.room = id;
       document.querySelector('.panel-index').textContent = room.index;
       panel.querySelector('h2').textContent = room.title;
       panel.querySelector('.panel-copy').textContent = room.copy;
+      panel.querySelector('.room-story p').textContent = room.story;
+      panel.querySelector('.room-skill p').textContent = room.skill;
+      document.querySelector('.visual-caption').textContent = room.ambience;
       panel.querySelector('.panel-projects').innerHTML = room.projects.map(([n, title, meta]) => `<div><span>${n}</span><strong>${title}</strong><small>${meta}</small></div>`).join('');
       buttons.forEach(button => button.classList.toggle('active', button.dataset.room === id));
       panel.classList.remove('pulse');
       requestAnimationFrame(() => panel.classList.add('pulse'));
+      window.dispatchEvent(new CustomEvent('house-room-change', { detail: { id } }));
+      if (audioEnabled) updateAmbience(id);
     }
 
     buttons.forEach(button => button.addEventListener('click', () => selectRoom(button.dataset.room)));
+    document.querySelector('[data-enter-tour]').addEventListener('click', () => {
+      selectRoom(activeRoom);
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    document.querySelector('[data-tour-prev]').addEventListener('click', () => {
+      const index = roomOrder.indexOf(activeRoom);
+      selectRoom(roomOrder[(index - 1 + roomOrder.length) % roomOrder.length]);
+    });
+    document.querySelector('[data-tour-next]').addEventListener('click', () => {
+      const index = roomOrder.indexOf(activeRoom);
+      selectRoom(roomOrder[(index + 1) % roomOrder.length]);
+    });
+    document.querySelector('[data-audio-toggle]').addEventListener('click', async event => {
+      audioEnabled = !audioEnabled;
+      event.currentTarget.setAttribute('aria-pressed', String(audioEnabled));
+      event.currentTarget.textContent = audioEnabled ? 'Couper l’ambiance' : 'Ambiance sonore';
+      if (audioEnabled) {
+        await startAmbience();
+        updateAmbience(activeRoom);
+      } else {
+        stopAmbience();
+      }
+    });
+
+    async function startAmbience() {
+      audioContext ||= new AudioContext();
+      if (audioContext.state === 'suspended') await audioContext.resume();
+      if (drone) return;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const filter = audioContext.createBiquadFilter();
+      osc.type = 'sine';
+      filter.type = 'lowpass';
+      gain.gain.value = 0.035;
+      osc.connect(filter).connect(gain).connect(audioContext.destination);
+      osc.start();
+      drone = { osc, gain, filter };
+    }
+
+    function updateAmbience(id) {
+      if (!drone || !audioContext) return;
+      const frequencies = { management: 132, ux: 176, brand: 148, lab: 220 };
+      const filters = { management: 520, ux: 760, brand: 610, lab: 940 };
+      const now = audioContext.currentTime;
+      drone.osc.frequency.setTargetAtTime(frequencies[id] || 160, now, .35);
+      drone.filter.frequency.setTargetAtTime(filters[id] || 650, now, .35);
+    }
+
+    function stopAmbience() {
+      if (!drone || !audioContext) return;
+      const current = drone;
+      current.gain.gain.setTargetAtTime(0.0001, audioContext.currentTime, .18);
+      window.setTimeout(() => {
+        current.osc.stop();
+        current.osc.disconnect();
+        current.filter.disconnect();
+        current.gain.disconnect();
+      }, 350);
+      drone = null;
+    }
+
+    selectRoom(activeRoom);
   </script>
   <script type="importmap">
     {
