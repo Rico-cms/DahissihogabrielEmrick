@@ -87,6 +87,14 @@ function extractAiAnswer(aiResponse) {
   return "";
 }
 
+function looksIncompleteAnswer(answer) {
+  const text = String(answer || "").trim();
+  if (!text) return true;
+  if (text.length < 80) return false;
+  if (/[.!?…)]$/.test(text)) return false;
+  return true;
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -122,6 +130,11 @@ export default {
     });
 
     const answer = extractAiAnswer(aiResponse) || "Je n'ai pas réussi à répondre clairement.";
+    if (looksIncompleteAnswer(answer)) {
+      return Response.json({
+        answer: `${answer}\n\nJe complète simplement : l’idée importante est de transformer cette notion en choix de composition concrets — hiérarchie claire, espaces mieux dosés, alignements cohérents et lecture plus fluide.`
+      }, { headers });
+    }
 
     return Response.json({ answer }, { headers });
   }

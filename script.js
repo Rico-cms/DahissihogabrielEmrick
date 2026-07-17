@@ -213,6 +213,9 @@ function normalizeQuestion(text){
 function answerQuestion(question){
   const q=normalizeQuestion(question);
   if(!q)return {source:"local",text:"Pose-moi une question directe : profil, projets, recrutement, UX/UI, gestion de projet ou contact. Je te réponds court, clair, utile."};
+  if(q.includes("golden ratio")||q.includes("ratio d or")||q.includes("nombre d or")||q.includes("section doree")||q.includes("proportion doree")){
+    return {source:"local",text:"**Je suis Nia, l’assistant d’Emrick.**\n\nLe golden ratio, ou nombre d’or, est une proportion d’environ 1,618 utilisée pour créer une relation harmonieuse entre deux tailles : par exemple une grande zone et une zone plus petite.\n\n- En design, il aide à organiser les rapports entre titres, textes, marges, images et colonnes.\n- Il ne sert pas à “faire joli” automatiquement : il donne surtout une base de composition équilibrée.\n- Emrick peut l’utiliser pour structurer une interface, hiérarchiser l’information et éviter que les blocs semblent posés au hasard.\n- Sur son portfolio, l’idée se retrouve surtout dans les grands contrastes de taille, les espaces négatifs, les colonnes asymétriques et la respiration entre les sections.\n\nConcrètement : Emrick ne l’utilise pas comme une formule rigide, mais comme une logique de proportion pour guider le regard et rendre une page plus lisible."};
+  }
   if(q.includes("pitch")||q.includes("20 secondes")||q.includes("resume")||q.includes("resumer")||q.includes("presente")||q.includes("profil")){
     return {source:"local",text:"Pitch rapide : Emrick est un IT Project Manager hybride — assez structuré pour piloter, assez designer pour rendre les choses utilisables, assez créatif pour donner une direction. Sa force : transformer du flou en système clair, livrable et compréhensible."};
   }
@@ -373,13 +376,13 @@ async function askChat(question){
   const typing=addMessage("Je réfléchis…","bot thinking");
   try{
     const llmAnswer=await askLlm(question);
-    typing.textContent=llmAnswer;
     typing.className="bot";
+    typing.innerHTML=formatBotAnswer(llmAnswer);
     chatHistory.push({role:"user",content:question},{role:"assistant",content:llmAnswer});
     renderSuggestions(nextSuggestions(question));
   }catch(error){
-    typing.textContent="Le LLM ne répond pas pour le moment. Je reste utile en local : demande-moi son pitch, pourquoi le recruter, ses projets forts ou ses coordonnées.";
     typing.className="bot";
+    typing.innerHTML=formatBotAnswer("Le LLM ne répond pas pour le moment. Je reste utile en local : demande-moi son pitch, pourquoi le recruter, ses projets forts ou ses coordonnées.");
     renderSuggestions(["Pitch en 20 secondes","Pourquoi le recruter ?","Comment le contacter ?"]);
   }
   if(chatHistory.length>10)chatHistory.splice(0,chatHistory.length-10);
