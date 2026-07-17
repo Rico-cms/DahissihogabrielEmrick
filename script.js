@@ -213,6 +213,9 @@ function normalizeQuestion(text){
 function answerQuestion(question){
   const q=normalizeQuestion(question);
   if(!q)return {source:"local",text:"Pose-moi une question directe : profil, projets, recrutement, UX/UI, gestion de projet ou contact. Je te réponds court, clair, utile."};
+  if(q.includes("pina colada")||q.includes("pinacolada")||q.includes("piña colada")){
+    return {source:"local",text:"Voici une recette simple de piña colada pour 1 verre.\n\n**Ingrédients**\n- 60 ml de rhum blanc\n- 90 ml de jus d’ananas\n- 30 ml de crème de coco\n- Une poignée de glaçons\n- Optionnel : tranche d’ananas ou cerise pour décorer\n\n**Préparation**\n- Mets le rhum, le jus d’ananas, la crème de coco et les glaçons dans un blender.\n- Mixe jusqu’à obtenir une texture lisse et légèrement mousseuse.\n- Verse dans un grand verre, puis ajoute la décoration si tu veux.\n\nVersion sans alcool : retire le rhum et ajoute un peu plus de jus d’ananas ou de lait de coco. Simple, tropical, efficace."};
+  }
   if(q.includes("golden ratio")||q.includes("ratio d or")||q.includes("nombre d or")||q.includes("section doree")||q.includes("proportion doree")){
     return {source:"local",text:"**Je suis Nia, l’assistant d’Emrick.**\n\nLe golden ratio, ou nombre d’or, est une proportion d’environ 1,618 utilisée pour créer une relation harmonieuse entre deux tailles : par exemple une grande zone et une zone plus petite.\n\n- En design, il aide à organiser les rapports entre titres, textes, marges, images et colonnes.\n- Il ne sert pas à “faire joli” automatiquement : il donne surtout une base de composition équilibrée.\n- Emrick peut l’utiliser pour structurer une interface, hiérarchiser l’information et éviter que les blocs semblent posés au hasard.\n- Sur son portfolio, l’idée se retrouve surtout dans les grands contrastes de taille, les espaces négatifs, les colonnes asymétriques et la respiration entre les sections.\n\nConcrètement : Emrick ne l’utilise pas comme une formule rigide, mais comme une logique de proportion pour guider le regard et rendre une page plus lisible."};
   }
@@ -345,6 +348,13 @@ function formatBotAnswer(text){
   return html.join("");
 }
 
+function completePossiblyTruncatedAnswer(answer){
+  const text=String(answer||"").trim();
+  if(!text)return "Je n’ai pas réussi à formuler une réponse utile.";
+  if(text.length<80||/[.!?…)]$/.test(text))return text;
+  return `${text}\n\nJe complète pour éviter une réponse coupée : retiens surtout l’idée principale, puis applique-la étape par étape. Si tu veux, je peux aussi te refaire cette réponse en version courte, détaillée ou actionnable.`;
+}
+
 async function askLlm(question){
   if(!LLM_ENDPOINT){
     return "Je peux répondre avec un LLM dès qu’un endpoint sécurisé est branché. Pour l’instant, je reste en mode FAQ locale pour éviter d’exposer une clé API dans le site.";
@@ -359,7 +369,7 @@ async function askLlm(question){
   });
   if(!response.ok)throw new Error("LLM request failed");
   const data=await response.json();
-  return data.answer||"Je n’ai pas réussi à formuler une réponse utile.";
+  return completePossiblyTruncatedAnswer(data.answer);
 }
 
 async function askChat(question){
