@@ -1537,6 +1537,39 @@ dialog li {
   animation: chat-pop .24s cubic-bezier(.16, 1, .3, 1);
 }
 
+.chat-messages p span,
+.chat-messages p .chat-heading {
+  display: block;
+}
+
+.chat-messages p span + span,
+.chat-messages p ul + span,
+.chat-messages p span + ul {
+  margin-top: .55rem;
+}
+
+.chat-messages p .chat-heading {
+  margin-bottom: .45rem;
+  color: var(--ink);
+  font: 800 .9rem Syne;
+}
+
+.chat-messages p ul {
+  margin: .45rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.chat-messages p li {
+  margin: .35rem 0;
+}
+
+.chat-messages p code {
+  border-radius: .35rem;
+  background: #17171312;
+  padding: .08rem .28rem;
+  font: .82em "DM Mono";
+}
+
 .chat-messages .bot {
   align-self: flex-start;
   background: #e8e2d7;

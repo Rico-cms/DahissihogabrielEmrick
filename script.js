@@ -284,10 +284,62 @@ function renderSuggestions(items=defaultSuggestions){
 function addMessage(text,type="bot"){
   const message=document.createElement("p");
   message.className=type;
-  message.textContent=text;
+  if(type.includes("bot"))message.innerHTML=formatBotAnswer(text);
+  else message.textContent=text;
   chatMessages.appendChild(message);
   chatMessages.scrollTop=chatMessages.scrollHeight;
   return message;
+}
+
+function escapeHtml(text){
+  return String(text).replace(/[&<>"']/g,character=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    "\"":"&quot;",
+    "'":"&#039;"
+  })[character]);
+}
+
+function inlineFormat(text){
+  return escapeHtml(text)
+    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+    .replace(/`([^`]+)`/g,"<code>$1</code>");
+}
+
+function formatBotAnswer(text){
+  const normalized=String(text||"").replace(/\r\n/g,"\n").trim();
+  if(!normalized)return "";
+  const lines=normalized.split("\n");
+  const html=[];
+  let list=[];
+  const flushList=()=>{
+    if(!list.length)return;
+    html.push(`<ul>${list.map(item=>`<li>${inlineFormat(item)}</li>`).join("")}</ul>`);
+    list=[];
+  };
+  for(const rawLine of lines){
+    const line=rawLine.trim();
+    if(!line) {
+      flushList();
+      continue;
+    }
+    const heading=line.match(/^#{1,4}\s+(.+)/);
+    if(heading){
+      flushList();
+      html.push(`<strong class="chat-heading">${inlineFormat(heading[1])}</strong>`);
+      continue;
+    }
+    const bullet=line.match(/^[-*•]\s+(.+)/);
+    if(bullet){
+      list.push(bullet[1]);
+      continue;
+    }
+    flushList();
+    html.push(`<span>${inlineFormat(line)}</span>`);
+  }
+  flushList();
+  return html.join("");
 }
 
 async function askLlm(question){
