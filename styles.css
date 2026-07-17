@@ -702,6 +702,44 @@ em {
   grid-column: 2;
 }
 
+.section-intro {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 34rem) minmax(120px, 1fr);
+  gap: 1.5rem;
+  align-items: end;
+  margin-top: 1.6rem;
+}
+
+.section-intro p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.section-flow {
+  position: relative;
+  height: 1px;
+  min-width: 120px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.section-flow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: translateX(-100%);
+  animation: section-flow 3.2s ease-in-out infinite;
+}
+
+@keyframes section-flow {
+  0%, 22% { transform: translateX(-100%); }
+  72%, 100% { transform: translateX(100%); }
+}
+
 .section-heading::after {
   content: "";
   position: absolute;
@@ -1641,6 +1679,13 @@ dialog li {
 
   .section-heading h2 {
     grid-column: auto;
+  }
+
+  .section-intro {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: .25rem;
   }
 
   .expertise,
