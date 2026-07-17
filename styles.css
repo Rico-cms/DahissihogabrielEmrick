@@ -354,17 +354,40 @@ button {
 
 .geo-map {
   position: relative;
-  display: grid;
-  min-height: 150px;
+  display: block;
+  min-height: 170px;
   border: 0;
   border-radius: .95rem;
   background:
-    radial-gradient(circle at var(--geo-x, 28%) var(--geo-y, 52%), #ff4b3324, transparent 32%),
-    linear-gradient(135deg, #171713, #2b2a24);
+    radial-gradient(circle at var(--geo-x, 28%) var(--geo-y, 62%), #ff4b3345, transparent 28%),
+    linear-gradient(135deg, #11110e, #24231f 58%, #3a251f);
   color: var(--paper);
   cursor: pointer;
   overflow: hidden;
-  transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s;
+  box-shadow: inset 0 1px 0 #ffffff18;
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s, background-position .5s;
+}
+
+.geo-map::before,
+.geo-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.geo-map::before {
+  background:
+    linear-gradient(90deg, #ffffff08 1px, transparent 1px),
+    linear-gradient(0deg, #ffffff08 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at var(--geo-x, 28%) var(--geo-y, 62%), #000 0 34%, transparent 72%);
+}
+
+.geo-map::after {
+  background: linear-gradient(105deg, transparent 0 38%, #ffffff18 48%, transparent 60%);
+  transform: translateX(-120%);
+  animation: geo-sweep 4.6s cubic-bezier(.16, 1, .3, 1) infinite;
 }
 
 .geo-map:hover {
@@ -372,47 +395,56 @@ button {
   box-shadow: 0 20px 50px #17171324;
 }
 
-.geo-map svg {
-  width: 100%;
-  height: 100%;
-  min-height: 150px;
+.geo-screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
-.geo-map path {
+.geo-screen svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 170px;
+}
+
+.geo-screen path {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.map-shape path {
-  fill: #f3eee3;
-  stroke: #f3eee3;
-  stroke-width: 2;
-  opacity: .24;
-  transition: opacity .55s, transform .55s cubic-bezier(.16, 1, .3, 1);
+.geo-contour {
+  stroke: #f3eee32a;
+  stroke-width: 1;
+  stroke-dasharray: 2 10;
+  animation: geo-contour-drift 12s linear infinite;
 }
 
-.map-shape.active path {
-  opacity: .92;
-  transform: translateY(-2px);
-}
-
-.map-shape {
-  transform-origin: center;
-  transition: opacity .55s, filter .55s;
-}
-
-.map-shape:not(.active) {
-  opacity: .38;
-  filter: blur(.2px);
+.geo-contour.two {
+  animation-duration: 15s;
+  animation-direction: reverse;
 }
 
 .geo-route {
-  fill: none;
   stroke: #ff4b33;
-  stroke-width: 2;
-  stroke-dasharray: 8 9;
-  animation: geo-route 2.8s linear infinite;
+  stroke-width: 2.5;
+  stroke-dasharray: 10 12;
+  filter: drop-shadow(0 0 10px #ff4b3366);
+  animation: geo-route 2.6s linear infinite;
+}
+
+.geo-point {
+  opacity: .45;
+  transform-origin: center;
+  transition: opacity .5s, filter .5s, transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.geo-point.active {
+  opacity: 1;
+  filter: drop-shadow(0 0 18px #ff4b3370);
+  transform: translateY(-3px);
 }
 
 .geo-pin {
@@ -424,26 +456,85 @@ button {
 .geo-pulse {
   fill: none;
   stroke: #ff4b33;
-  stroke-width: 2;
-  opacity: .75;
+  stroke-width: 1.5;
+  opacity: .7;
   transform-origin: center;
   animation: geo-pulse 2s ease-out infinite;
 }
 
-.geo-node {
+.geo-point text {
   fill: #f3eee3;
-  opacity: .65;
+  font: 800 11px "DM Mono";
+  letter-spacing: .12em;
 }
 
-.geo-map text {
-  fill: #f3eee3;
-  font: 700 12px "DM Mono";
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.geo-map > span {
+.geo-code {
   position: absolute;
+  z-index: 2;
+  font: 800 clamp(3.6rem, 8vw, 6rem) Syne;
+  letter-spacing: -.09em;
+  color: #f3eee3;
+  opacity: .08;
+  transition: opacity .5s, transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.geo-code.active {
+  opacity: .2;
+  transform: translateY(-4px) scale(1.02);
+}
+
+.geo-code-abidjan {
+  left: 1rem;
+  bottom: .45rem;
+}
+
+.geo-code-benin {
+  right: 1.2rem;
+  top: .35rem;
+}
+
+.geo-signal {
+  position: absolute;
+  z-index: 2;
+  left: var(--geo-x, 28%);
+  top: var(--geo-y, 62%);
+  width: 90px;
+  height: 90px;
+  border: 1px solid #ff4b3350;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: left .55s cubic-bezier(.16, 1, .3, 1), top .55s cubic-bezier(.16, 1, .3, 1);
+}
+
+.geo-signal::before,
+.geo-signal::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid #f3eee330;
+  border-radius: inherit;
+}
+
+.geo-signal::after {
+  inset: 36px;
+  background: #ff4b33;
+  box-shadow: 0 0 26px #ff4b33;
+}
+
+.geo-caption {
+  position: absolute;
+  left: .85rem;
+  top: .75rem;
+  z-index: 3;
+  color: #f3eee3b8;
+  font: 600 .58rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.geo-action {
+  position: absolute;
+  z-index: 3;
   right: .85rem;
   bottom: .75rem;
   border: 1px solid #ffffff36;
@@ -460,9 +551,18 @@ button {
   to { stroke-dashoffset: -34; }
 }
 
+@keyframes geo-contour-drift {
+  to { stroke-dashoffset: -120; }
+}
+
 @keyframes geo-pulse {
   0% { opacity: .75; transform: scale(.72); }
   100% { opacity: 0; transform: scale(1.35); }
+}
+
+@keyframes geo-sweep {
+  0%, 55% { transform: translateX(-120%); }
+  82%, 100% { transform: translateX(120%); }
 }
 
 .hero-grid {
@@ -2003,7 +2103,7 @@ dialog li {
   }
 
   .geo-map,
-  .geo-map svg {
+  .geo-screen svg {
     min-height: 128px;
   }
 
@@ -2295,7 +2395,9 @@ dialog li {
   .monogram,
   .orbit,
   .geo-route,
+  .geo-contour,
   .geo-pulse,
+  .geo-map::after,
   .project::before,
   .art-jdis i,
   .art-cdcrb i,

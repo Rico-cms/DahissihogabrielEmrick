@@ -63,15 +63,15 @@ if(geoCard){
       title:"Abidjan",
       copy:"Base actuelle : là où Emrick structure, pilote et transforme les projets digitaux.",
       action:"Voir Bénin",
-      x:"28%",
-      y:"52%"
+      x:"24%",
+      y:"62%"
     },
     benin:{
       title:"Bénin",
       copy:"Trajectoire et racines créatives : patrimoine, marques, produits et collaborations entre Cotonou et la région.",
       action:"Voir Abidjan",
-      x:"74%",
-      y:"66%"
+      x:"72%",
+      y:"47%"
     }
   };
   let activeGeo="abidjan";
