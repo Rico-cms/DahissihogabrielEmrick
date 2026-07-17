@@ -44,7 +44,7 @@ if(!reducedMotion){
     });
   },{passive:true});
 
-  document.querySelectorAll(".pill,.hero-aside a,.contact-links a,.credential-controls button,.project-more button").forEach(element=>{
+  document.querySelectorAll(".pill,.hero-aside a,.contact-links a,.credential-controls button,.project-more button,.geo-map").forEach(element=>{
     element.addEventListener("pointermove",event=>{
       if(matchMedia("(pointer: coarse)").matches)return;
       const rect=element.getBoundingClientRect();
@@ -54,6 +54,45 @@ if(!reducedMotion){
     });
     element.addEventListener("pointerleave",()=>{element.style.transform=""});
   });
+}
+
+const geoCard=document.querySelector("[data-location-card]");
+if(geoCard){
+  const geoStates={
+    abidjan:{
+      title:"Abidjan",
+      copy:"Base actuelle : là où Emrick structure, pilote et transforme les projets digitaux.",
+      action:"Voir Bénin",
+      x:"28%",
+      y:"52%"
+    },
+    benin:{
+      title:"Bénin",
+      copy:"Trajectoire et racines créatives : patrimoine, marques, produits et collaborations entre Cotonou et la région.",
+      action:"Voir Abidjan",
+      x:"74%",
+      y:"66%"
+    }
+  };
+  let activeGeo="abidjan";
+  const title=geoCard.querySelector("[data-location-title]");
+  const copy=geoCard.querySelector("[data-location-copy]");
+  const action=geoCard.querySelector("[data-location-action]");
+  const toggle=geoCard.querySelector("[data-location-toggle]");
+  const setGeo=next=>{
+    activeGeo=next;
+    const state=geoStates[activeGeo];
+    title.textContent=state.title;
+    copy.textContent=state.copy;
+    action.textContent=state.action;
+    toggle.style.setProperty("--geo-x",state.x);
+    toggle.style.setProperty("--geo-y",state.y);
+    geoCard.querySelectorAll("[data-map-shape]").forEach(shape=>{
+      shape.classList.toggle("active",shape.dataset.mapShape===activeGeo);
+    });
+  };
+  toggle.addEventListener("click",()=>setGeo(activeGeo==="abidjan"?"benin":"abidjan"));
+  if(!reducedMotion)setInterval(()=>setGeo(activeGeo==="abidjan"?"benin":"abidjan"),5000);
 }
 
 document.querySelectorAll(".expertise-row").forEach(row=>{
