@@ -428,6 +428,12 @@ em {
   line-height: 1.7;
 }
 
+.hero-actions {
+  display: grid;
+  gap: .25rem;
+  margin-top: 1.1rem;
+}
+
 .hero-aside a {
   display: flex;
   justify-content: space-between;
@@ -442,6 +448,47 @@ em {
 .hero-aside a:hover,
 .contact-links a:not(.primary):hover {
   color: var(--accent);
+}
+
+.hero-proof {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .75rem;
+  margin: -2rem 0 2rem;
+}
+
+.hero-proof span {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: 64px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f7f3eac7;
+  padding: .7rem .95rem;
+  color: var(--muted);
+  font-size: .82rem;
+  backdrop-filter: blur(12px);
+}
+
+.hero-proof span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 20%, #fff7 45%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .65s cubic-bezier(.16, 1, .3, 1);
+}
+
+.hero-proof span:hover::after {
+  transform: translateX(120%);
+}
+
+.hero-proof b {
+  color: var(--accent);
+  font: 600 .62rem "DM Mono";
 }
 
 .hero-stage {
@@ -825,6 +872,29 @@ em {
   color: #aaa;
 }
 
+.project-proof {
+  display: grid;
+  grid-template-columns: minmax(0, .72fr) auto;
+  gap: 1.5rem;
+  align-items: end;
+  max-width: 900px;
+  margin: -3rem 0 2rem auto;
+  color: #d6d2c8;
+}
+
+.project-proof p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.project-proof span {
+  color: #aaa;
+  font: 500 .65rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
 .project-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
@@ -871,6 +941,24 @@ em {
 
 .project .meta {
   transition: opacity .25s, transform .25s;
+}
+
+.project-insight {
+  display: block;
+  max-width: 25rem;
+  margin: 0 0 1.2rem;
+  color: #4c4b44;
+  font-size: .88rem;
+  line-height: 1.6;
+}
+
+.project-insight strong {
+  display: inline-block;
+  margin-right: .35rem;
+  color: var(--accent);
+  font: 600 .62rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .08em;
 }
 
 .project-main {
@@ -1321,6 +1409,36 @@ dialog h2 {
   line-height: 1.7;
 }
 
+.dialog-proof {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin: 1.4rem 0;
+}
+
+.dialog-proof article {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fff7;
+}
+
+.dialog-proof span {
+  display: block;
+  margin-bottom: .55rem;
+  color: var(--accent);
+  font: 600 .62rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .09em;
+}
+
+.dialog-proof p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
 dialog li {
   margin: .8rem 0;
   line-height: 1.6;
@@ -1422,6 +1540,13 @@ dialog li {
 
 .chat-head strong {
   font: 700 1.15rem Syne;
+}
+
+.chat-head strong::after {
+  content: " · guide";
+  color: var(--accent);
+  font: 500 .72rem "DM Mono";
+  letter-spacing: .04em;
 }
 
 .chat-close {
@@ -1588,6 +1713,11 @@ dialog li {
     max-width: 560px;
   }
 
+  .hero-proof {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: -1rem;
+  }
+
   .hero-stage {
     height: clamp(280px, 48vw, 360px);
   }
@@ -1631,6 +1761,11 @@ dialog li {
 
   .project-grid {
     grid-template-columns: 1fr;
+  }
+
+  .project-proof {
+    grid-template-columns: 1fr;
+    margin: -2rem 0 2rem;
   }
 
   .project,
@@ -1716,6 +1851,16 @@ dialog li {
 
   .hero-aside {
     font-size: .95rem;
+  }
+
+  .hero-proof {
+    grid-template-columns: 1fr;
+    gap: .55rem;
+    margin: -1rem 0 1.4rem;
+  }
+
+  .hero-proof span {
+    min-height: 52px;
   }
 
   .hero-aside a {
@@ -1864,6 +2009,10 @@ dialog li {
     flex-direction: column;
   }
 
+  .project-insight {
+    font-size: .82rem;
+  }
+
   .project-bottom strong {
     font-size: 1.35rem;
   }
@@ -1922,6 +2071,10 @@ dialog li {
 
   dialog h2 {
     font-size: 2.1rem;
+  }
+
+  .dialog-proof {
+    grid-template-columns: 1fr;
   }
 
   .mini-chat {
