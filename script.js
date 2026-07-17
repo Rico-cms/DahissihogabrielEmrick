@@ -200,6 +200,7 @@ const chatInput=document.querySelector("#chat-input");
 const LLM_ENDPOINT="https://gabriel-portfolio-chat.dahissihogabriel.workers.dev";
 const chatHistory=[];
 const profileIntentWords=["gabriel","emrick","il ","lui","son ","ses ","profil","portfolio","cv","experience","parcours","competence","expertise"];
+const defaultSuggestions=["Pitch en 20 secondes","Pourquoi le recruter ?","Quel projet prouve son niveau ?","Comment le contacter ?"];
 
 function isAboutProfile(q){
   return profileIntentWords.some(word=>q.includes(word));
@@ -211,41 +212,73 @@ function normalizeQuestion(text){
 
 function answerQuestion(question){
   const q=normalizeQuestion(question);
-  if(!q)return {source:"local",text:"Pose-moi une question sur Gabriel, ses projets, ses compétences ou ses coordonnées."};
+  if(!q)return {source:"local",text:"Pose-moi une question directe : profil, projets, recrutement, UX/UI, gestion de projet ou contact. Je te réponds court, clair, utile."};
+  if(q.includes("pitch")||q.includes("20 secondes")||q.includes("resume")||q.includes("resumer")||q.includes("presente")||q.includes("profil")){
+    return {source:"local",text:"Pitch rapide : Emrick est un IT Project Manager hybride — assez structuré pour piloter, assez designer pour rendre les choses utilisables, assez créatif pour donner une direction. Sa force : transformer du flou en système clair, livrable et compréhensible."};
+  }
+  if(q.includes("recruter")||q.includes("embaucher")||q.includes("choisir")||q.includes("pourquoi lui")||q.includes("valeur")){
+    return {source:"local",text:"Pourquoi le recruter : parce qu’il ne reste pas coincé dans une seule case. Il peut cadrer un besoin, parler métier, organiser un workflow, challenger une interface et garder le projet orienté résultat. C’est rare chez les profils purement design ou purement gestion."};
+  }
+  if(q.includes("niveau")||q.includes("preuve")||q.includes("meilleur projet")||q.includes("projet prouve")||q.includes("projet fort")){
+    return {source:"local",text:"Le projet le plus démonstratif est JDIS : il combine pilotage, compréhension métier, UX/UI et transformation opérationnelle. Pour la sensibilité produit pure, Le Petit Nokoué est très parlant. Pour la direction créative, CDCRB montre son sens de l’identité."};
+  }
   if(q.includes("bonjour")||q.includes("salut")||q.includes("hello")||q.includes("hey")){
-    return {source:"local",text:"Bonjour, je suis Nia, l’assistant d’Emrick. Je peux aider à comprendre son profil, ses projets, ou répondre à des questions sur la gestion de projet, l’UX/UI, le branding et la stratégie digitale."};
+    return {source:"local",text:"Salut — je suis Nia. Je peux te faire gagner du temps : demande-moi son pitch, ses projets les plus solides, pourquoi le recruter, ou comment le contacter."};
   }
   if(q.includes("disponible")||q.includes("availability")||q.includes("recrute")||q.includes("mission")||q.includes("freelance")){
-    return {source:"local",text:"Oui, Gabriel est basé à Abidjan et ouvert à de nouveaux défis autour de la stratégie digitale, du product design, de l’UX/UI et de la transformation opérationnelle."};
+    return {source:"local",text:"Oui. Emrick est basé à Abidjan et ouvert à des opportunités où il peut structurer, piloter et améliorer des produits ou systèmes digitaux. Le bon terrain pour lui : projet ambitieux, besoin flou, équipe à aligner, résultat à livrer."};
   }
   if(q.includes("contact")||q.includes("email")||q.includes("mail")||q.includes("telephone")||q.includes("appel")||q.includes("rdv")||q.includes("creneau")){
-    return {source:"local",text:"Tu peux le contacter par email à dahissihogabriel@gmail.com, par téléphone au +225 05 96 48 93 43, ou réserver un créneau via le bouton de contact du site."};
+    return {source:"local",text:"Contact direct : dahissihogabriel@gmail.com. Téléphone : +225 05 96 48 93 43. Le plus simple : utiliser le bouton de réservation du site si tu veux cadrer un échange proprement."};
   }
   if((q.includes("lequel")||q.includes("quel projet")||q.includes("projet"))&&(q.includes("ux")||q.includes("ui")||q.includes("produit")||q.includes("product"))&&isAboutProfile(q)){
-    return {source:"local",text:"Les projets les plus orientés UX/UI sont Le Petit Nokoué, pour l’audit UX et l’évolution du design system, et JDIS, pour la structuration d’écrans métiers et de parcours critiques."};
+    return {source:"local",text:"Pour l’UX/UI : Le Petit Nokoué montre l’audit, les frictions et le design system. JDIS montre une UX plus opérationnelle : écrans métiers, parcours critiques, besoin de clarté dans un contexte logistique."};
   }
   if(q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")||(q.includes("projet")&&isAboutProfile(q))){
-    return {source:"local",text:"Ses projets couvrent notamment JDIS chez Jalo Logistics, CDCRB, Africaine Vie, Le Petit Nokoué, The Busy Bee School et Lyz Digital. La section Projets permet d’ouvrir chaque cas."};
+    return {source:"local",text:"Lecture rapide des projets : JDIS = pilotage + produit + logistique. Le Petit Nokoué = UX/product design. CDCRB = direction artistique culturelle. Africaine Vie et Busy Bee = branding appliqué. Lyz Digital = exécution frontend."};
   }
   if(q.includes("competence")||q.includes("expertise")||((q.includes("ux")||q.includes("ui")||q.includes("design")||q.includes("branding")||q.includes("strategie"))&&isAboutProfile(q))){
-    return {source:"local",text:"Ses trois grands leviers sont la gestion et transformation digitale, la stratégie UX/UI, et le branding/direction créative."};
+    return {source:"local",text:"Ses compétences fortes : 1) cadrer et piloter, 2) transformer un besoin en expérience utilisable, 3) donner une direction visuelle cohérente. Le point intéressant, c’est la combinaison des trois."};
   }
   if((q.includes("outil")||q.includes("tools")||q.includes("figma")||q.includes("jira")||q.includes("notion")||q.includes("github")||q.includes("adobe"))&&isAboutProfile(q)){
-    return {source:"local",text:"Il travaille avec Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads et ChatGPT."};
+    return {source:"local",text:"Outils : Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads et ChatGPT. Mais le vrai sujet n’est pas l’outil : c’est sa capacité à mettre de l’ordre dans le travail."};
   }
   if(q.includes("parcours")||q.includes("experience")||q.includes("cv")||q.includes("jalo")||q.includes("saekum")){
-    return {source:"local",text:"Son parcours mêle project management, UX/UI, direction artistique et product design, avec des expériences chez Jalo Logistics, SÆKUM et Le Petit Nokoué."};
+    return {source:"local",text:"Parcours : Jalo Logistics pour le project management et la transformation digitale ; SÆKUM pour la direction artistique ; Le Petit Nokoué pour le product design. C’est ce mélange qui construit son profil hybride."};
   }
   if(q.includes("certification")||q.includes("certificat")||q.includes("diplome")||q.includes("formation")){
-    return {source:"local",text:"Le site liste 15 certifications visibles dans le Hall of Fame : IA, product management, agile, marketing digital, design web, Git/GitHub et Adobe Photoshop."};
+    return {source:"local",text:"Il a 15 certifications visibles : IA, project/product management, agile, marketing digital, design web, Git/GitHub et Adobe Photoshop. Ça montre surtout une logique d’apprentissage continu."};
   }
   if(q.includes("localisation")||q.includes("ville")||q.includes("abidjan")||q.includes("cotonou")||q.includes("ou est")){
-    return {source:"local",text:"Gabriel est basé à Abidjan, avec une trajectoire également liée à Cotonou et à des projets en Afrique de l’Ouest."};
+    return {source:"local",text:"Emrick est basé à Abidjan, avec une trajectoire entre Abidjan et Cotonou. Son terrain naturel : projets digitaux et créatifs en Afrique de l’Ouest."};
   }
   if(q.includes("chaos")||q.includes("animation")||q.includes("interactif")){
     return {source:"local",text:"Petit indice : clique sur le mot « chaos » dans le hero. Le site garde des micro-interactions utiles, sans détour par une expérience 3D instable."};
   }
+  if(q.includes("gestion de projet")||q.includes("project management")||q.includes("workflow")||q.includes("methode")||q.includes("organisation")){
+    return {source:"local",text:"Sa méthode : clarifier le problème, rendre les responsabilités visibles, créer un rythme de décision, puis livrer. Il ne s’agit pas juste de suivre des tâches : il s’agit de rendre le projet pilotable."};
+  }
+  if(q.includes("branding")||q.includes("marque")||q.includes("identite")||q.includes("direction creative")){
+    return {source:"local",text:"En branding, son approche est utile avant d’être décorative : cohérence, reconnaissance, usage réel sur les supports, et une direction qui sert le positionnement."};
+  }
+  if(q.includes("faiblesse")||q.includes("limite")||q.includes("risque")){
+    return {source:"local",text:"Lecture honnête : son profil est hybride, donc il faut lui donner des sujets où cette transversalité est utile. Sur un poste ultra-spécialisé et isolé, ce serait moins pertinent que sur un rôle qui demande coordination, produit et sens du design."};
+  }
   return {source:"llm",text:"Je n’ai pas de réponse locale précise."};
+}
+
+function nextSuggestions(question){
+  const q=normalizeQuestion(question);
+  if(q.includes("recruter")||q.includes("pitch")||q.includes("profil"))return ["Quel projet prouve son niveau ?","Ses compétences clés ?","Ses limites ?"];
+  if(q.includes("projet")||q.includes("jdis")||q.includes("ux"))return ["Pourquoi JDIS est fort ?","Son approche UX ?","Comment le contacter ?"];
+  if(q.includes("contact")||q.includes("disponible"))return ["Pitch en 20 secondes","Pourquoi le recruter ?","Ses outils ?"];
+  return defaultSuggestions;
+}
+
+function renderSuggestions(items=defaultSuggestions){
+  const container=document.querySelector(".chat-suggestions");
+  container.innerHTML=items.map(item=>`<button type="button">${item}</button>`).join("");
+  container.querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>askChat(button.textContent)));
 }
 
 function addMessage(text,type="bot"){
@@ -279,7 +312,10 @@ async function askChat(question){
   const answer=answerQuestion(question);
   if(answer.source==="local"){
     chatHistory.push({role:"user",content:question},{role:"assistant",content:answer.text});
-    setTimeout(()=>addMessage(answer.text,"bot"),180);
+    setTimeout(()=>{
+      addMessage(answer.text,"bot");
+      renderSuggestions(nextSuggestions(question));
+    },180);
     return;
   }
   const typing=addMessage("Je réfléchis…","bot thinking");
@@ -288,9 +324,11 @@ async function askChat(question){
     typing.textContent=llmAnswer;
     typing.className="bot";
     chatHistory.push({role:"user",content:question},{role:"assistant",content:llmAnswer});
+    renderSuggestions(nextSuggestions(question));
   }catch(error){
-    typing.textContent="Le LLM ne répond pas pour le moment. Réessaie plus tard ou pose une question sur les projets, compétences, parcours ou contacts.";
+    typing.textContent="Le LLM ne répond pas pour le moment. Je reste utile en local : demande-moi son pitch, pourquoi le recruter, ses projets forts ou ses coordonnées.";
     typing.className="bot";
+    renderSuggestions(["Pitch en 20 secondes","Pourquoi le recruter ?","Comment le contacter ?"]);
   }
   if(chatHistory.length>10)chatHistory.splice(0,chatHistory.length-10);
 }
@@ -318,6 +356,4 @@ chatForm.addEventListener("submit",event=>{
   askChat(question);
 });
 
-document.querySelectorAll(".chat-suggestions button").forEach(button=>button.addEventListener("click",()=>{
-  askChat(button.textContent);
-}));
+renderSuggestions();

@@ -1401,6 +1401,12 @@ dialog li {
   box-shadow: 0 18px 55px #17171330;
   position: relative;
   overflow: hidden;
+  transition: transform .25s cubic-bezier(.16, 1, .3, 1), box-shadow .25s;
+}
+
+.chat-toggle:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 70px #1717133d;
 }
 
 .chat-toggle span {
@@ -1434,7 +1440,7 @@ dialog li {
   position: absolute;
   right: 0;
   bottom: 92px;
-  width: min(390px, calc(100vw - 2rem));
+  width: min(430px, calc(100vw - 2rem));
   border: 1px solid var(--line);
   border-radius: 1.3rem;
   background: #f7f3ebf2;
@@ -1460,7 +1466,7 @@ dialog li {
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-start;
-  padding: 1rem;
+  padding: 1.05rem 1.1rem;
   background: var(--ink);
   color: var(--paper);
 }
@@ -1476,6 +1482,30 @@ dialog li {
 
 .chat-head strong {
   font: 700 1.15rem Syne;
+}
+
+.chat-head strong::after {
+  content: " · sharp";
+  color: var(--accent);
+  font: 500 .68rem "DM Mono";
+  letter-spacing: .05em;
+}
+
+.chat-brief {
+  display: flex;
+  gap: .45rem;
+  padding: .85rem 1rem 0;
+  background: #f7f3ebf2;
+}
+
+.chat-brief span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .35rem .55rem;
+  color: var(--muted);
+  font: 600 .56rem "DM Mono";
+  text-transform: uppercase;
+  letter-spacing: .08em;
 }
 
 .chat-close {
@@ -1510,6 +1540,7 @@ dialog li {
 .chat-messages .bot {
   align-self: flex-start;
   background: #e8e2d7;
+  border-top-left-radius: .35rem;
 }
 
 .chat-messages .thinking {
@@ -1521,6 +1552,7 @@ dialog li {
   align-self: flex-end;
   background: var(--accent);
   color: #fff;
+  border-top-right-radius: .35rem;
 }
 
 @keyframes chat-thinking {
@@ -1551,11 +1583,15 @@ dialog li {
   padding: .55rem .75rem;
   font: 500 .68rem "DM Mono";
   cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
 }
 
 .chat-suggestions button:hover {
   border-color: var(--accent);
+  background: var(--accent);
   color: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
 }
 
 .chat-form {
