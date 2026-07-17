@@ -491,294 +491,110 @@ em {
   font: 600 .62rem "DM Mono";
 }
 
-.hero-stage {
-  height: 400px;
-  position: relative;
-  overflow: hidden;
+.hero-composition {
   display: grid;
-  place-items: center;
-  border-radius: 1.25rem;
-  background:
-    radial-gradient(circle at var(--stage-x, 50%) var(--stage-y, 50%), #ffffff26, transparent 18rem),
-    linear-gradient(135deg, #171713 0%, #25251f 48%, #ff4d2e 130%);
-  color: var(--paper);
-  border: 1px solid #ffffff1a;
-  box-shadow: 0 2rem 6rem #17171324;
-  isolation: isolate;
+  grid-template-columns: minmax(0, 1.35fr) minmax(190px, .55fr) minmax(190px, .55fr);
+  gap: 1rem;
+  margin: 1.2rem 0 1.6rem;
 }
 
-.hero-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, transparent, #ffffff18, transparent),
-    repeating-linear-gradient(0deg, #ffffff09 0 1px, transparent 1px 13px),
-    repeating-linear-gradient(90deg, #ffffff07 0 1px, transparent 1px 13px);
-  transform: translateX(-120%);
-  animation: stage-scan 4.8s cubic-bezier(.16, 1, .3, 1) infinite;
-  z-index: 1;
+.composition-card {
+  position: relative;
+  min-height: 190px;
+  border: 1px solid var(--line);
+  border-radius: 1.2rem;
+  background: #f7f3eac7;
+  padding: 1.2rem;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transition: transform .28s cubic-bezier(.16, 1, .3, 1), border-color .25s, background .25s;
 }
 
-.hero-stage::after {
+.composition-card::after {
   content: "";
   position: absolute;
-  width: 220px;
-  height: 220px;
-  left: var(--stage-x, 50%);
-  top: var(--stage-y, 50%);
+  width: 12rem;
+  height: 12rem;
+  right: -6rem;
+  bottom: -7rem;
   border-radius: 50%;
-  background: #ffffff17;
-  transform: translate(-50%, -50%);
-  transition: width .35s, height .35s;
-  pointer-events: none;
-  z-index: 1;
+  background: #ff4d2e12;
+  transition: transform .35s, opacity .35s;
 }
 
-.hero-stage:hover::after {
-  width: 390px;
-  height: 390px;
+.composition-card:hover {
+  transform: translateY(-5px);
+  border-color: #ff4d2e66;
+  background: #fff9;
 }
 
-@keyframes stage-scan {
-  0%, 55% { transform: translateX(-120%); }
-  80%, 100% { transform: translateX(120%); }
+.composition-card:hover::after {
+  transform: scale(1.4);
+  opacity: .85;
 }
 
-.stage-copy {
-  position: absolute;
-  inset: 0;
+.composition-large {
+  grid-row: span 2;
+  min-height: 396px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  font: 800 clamp(5rem, 14vw, 12.5rem) / .72 Syne;
-  letter-spacing: -.08em;
-  opacity: .09;
-  animation: stage-copy-drift 8s ease-in-out infinite alternate;
-  z-index: 0;
-}
-
-.stage-copy span:last-child {
-  align-self: flex-end;
-}
-
-.monogram {
-  z-index: 5;
-  display: grid;
-  place-items: center;
-  width: clamp(8.5rem, 17vw, 13rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px solid #ffffff3a;
+  justify-content: space-between;
   background:
-    radial-gradient(circle, #ff4d2e 0 44%, #ff4d2e00 45%),
-    #ffffff10;
-  backdrop-filter: blur(8px);
-  font: 800 clamp(3.4rem, 8vw, 6.8rem) Syne;
-  letter-spacing: -.12em;
-  animation: monogram-pulse 4.2s ease-in-out infinite;
-  box-shadow: 0 1.8rem 4rem #00000024;
+    linear-gradient(135deg, #171713, #272620);
+  color: var(--paper);
 }
 
-.orbit {
-  position: absolute;
-  border: 1px solid #fff9;
-  border-radius: 50%;
-  transform: rotate(-18deg);
-  animation: orbit-turn 9s linear infinite;
-  z-index: 3;
-}
-
-.orbit.one {
-  width: 390px;
-  height: 180px;
-}
-
-.orbit.two {
-  width: 520px;
-  height: 250px;
-  animation-direction: reverse;
-  animation-duration: 13s;
-}
-
-.hero-stage .monogram,
-.hero-stage .orbit {
-  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
-}
-
-@keyframes stage-copy-drift {
-  to { transform: translate3d(-2.5%, 1.5%, 0) scale(1.035); }
-}
-
-@keyframes monogram-pulse {
-  0%, 100% { filter: drop-shadow(0 0 0 #ffffff00); transform: scale(1); }
-  50% { filter: drop-shadow(0 20px 35px #00000018); transform: scale(1.025); }
-}
-
-@keyframes orbit-turn {
-  to { rotate: 360deg; }
-}
-
-.hero-stage p {
-  position: absolute;
-  right: 2rem;
-  bottom: 1.5rem;
-  z-index: 6;
-  max-width: 300px;
-  text-align: right;
-  font: .68rem / 1.5 "DM Mono";
-  text-transform: uppercase;
-  color: #ffffffb8;
-}
-
-.stage-grid {
-  position: absolute;
-  inset: 1.2rem;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: .5rem;
-  opacity: .6;
-}
-
-.stage-grid span {
-  border: 1px solid #ffffff12;
-  border-radius: .8rem;
-  background: #ffffff05;
-  transform: scaleY(.62);
-  transform-origin: bottom;
-  animation: grid-rise 5s ease-in-out infinite;
-}
-
-.stage-grid span:nth-child(2n) { animation-delay: .35s; }
-.stage-grid span:nth-child(3n) { animation-delay: .7s; }
-
-@keyframes grid-rise {
-  50% { transform: scaleY(1); background: #ffffff0c; }
-}
-
-.system-card {
-  position: absolute;
-  z-index: 6;
-  min-width: 170px;
-  border: 1px solid #ffffff2e;
-  border-radius: 1rem;
-  background: #f1efe8e8;
-  color: var(--ink);
-  padding: .9rem;
-  box-shadow: 0 1rem 3rem #00000024;
-  backdrop-filter: blur(16px);
-  animation: card-float 5.2s ease-in-out infinite alternate;
-}
-
-.system-card::before {
+.composition-large::before {
   content: "";
   position: absolute;
-  width: 8px;
-  height: 8px;
-  left: .9rem;
-  top: .9rem;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 6px #ff4d2e1f;
+  inset: 1rem;
+  border: 1px solid #ffffff14;
+  border-radius: .8rem;
+  background:
+    linear-gradient(#ffffff08 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff06 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
 }
 
-.system-card small {
-  display: block;
-  margin-left: 1.15rem;
-  color: var(--muted);
-  font: 600 .58rem "DM Mono";
-  letter-spacing: .1em;
+.composition-large .index {
+  color: #ffffff99;
 }
 
-.system-card strong {
-  display: block;
-  margin-top: .75rem;
-  font: 700 1.05rem Syne;
+.composition-large h2 {
+  position: relative;
+  z-index: 1;
+  margin: auto 0 1.4rem;
+  font: 700 clamp(3rem, 6vw, 6rem)/.9 Syne;
+  letter-spacing: -.06em;
 }
 
-.system-card i {
-  display: block;
-  margin-top: .2rem;
+.composition-large p:last-child {
+  position: relative;
+  z-index: 1;
+  max-width: 35rem;
+  margin: 0;
+  color: #ffffffb8;
+  line-height: 1.8;
+}
+
+.composition-card span {
   color: var(--accent);
-  font: 500 .68rem "DM Mono";
-  text-transform: uppercase;
-  letter-spacing: .08em;
+  font: 600 .62rem "DM Mono";
 }
 
-.card-brief {
-  left: clamp(1rem, 5vw, 4rem);
-  top: 2.4rem;
-  transform: rotate(-3deg);
+.composition-card strong {
+  display: block;
+  margin: 2.4rem 0 .7rem;
+  font: 700 1.55rem Syne;
 }
 
-.card-workflow {
-  right: clamp(1rem, 7vw, 7rem);
-  top: 4.2rem;
-  animation-delay: .5s;
-}
-
-.card-product {
-  left: 19%;
-  bottom: 2.2rem;
-  transform: rotate(2deg);
-  animation-delay: .9s;
-}
-
-@keyframes card-float {
-  to { translate: 0 -10px; }
-}
-
-.stage-status {
-  position: absolute;
-  z-index: 6;
-  right: 2rem;
-  top: 1.4rem;
-  display: flex;
-  gap: .35rem;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  max-width: 320px;
-}
-
-.stage-status span {
-  border: 1px solid #ffffff24;
-  border-radius: 999px;
-  background: #ffffff12;
-  padding: .42rem .58rem;
-  color: #ffffffd4;
-  font: 600 .55rem "DM Mono";
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.impact-strip {
-  display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto 1fr auto;
-  gap: .85rem;
-  align-items: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #f7f3eacc;
-  margin: 1rem 0 1.6rem;
-  padding: .85rem 1rem;
-  backdrop-filter: blur(12px);
+.composition-card p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
   color: var(--muted);
-  font: 600 .68rem "DM Mono";
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.impact-strip i {
-  height: 1px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-  transform-origin: left;
-  animation: impact-flow 2.8s ease-in-out infinite;
-}
-
-@keyframes impact-flow {
-  0%, 100% { transform: scaleX(.25); opacity: .45; }
-  50% { transform: scaleX(1); opacity: 1; }
+  line-height: 1.6;
 }
 
 .stats {
@@ -1939,42 +1755,14 @@ dialog li {
     margin-top: -1rem;
   }
 
-  .hero-stage {
-    height: clamp(280px, 48vw, 360px);
+  .hero-composition {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .system-card {
-    min-width: 145px;
-    padding: .75rem;
-  }
-
-  .card-brief {
-    left: 1rem;
-    top: 1.2rem;
-  }
-
-  .card-workflow {
-    right: 1rem;
-    top: 2.2rem;
-  }
-
-  .card-product {
-    left: 1rem;
-    bottom: 1rem;
-  }
-
-  .stage-status {
-    display: none;
-  }
-
-  .impact-strip {
-    grid-template-columns: 1fr;
-    border-radius: 1.2rem;
-    align-items: start;
-  }
-
-  .impact-strip i {
-    width: 100%;
+  .composition-large {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 320px;
   }
 
   .stats {
@@ -2122,66 +1910,17 @@ dialog li {
     padding-top: .9rem;
   }
 
-  .hero-stage {
-    height: 270px;
-    border-radius: 1rem;
+  .hero-composition {
+    grid-template-columns: 1fr;
   }
 
-  .system-card {
-    min-width: auto;
-    width: 142px;
-    font-size: .8rem;
-  }
-
-  .system-card strong {
-    font-size: .88rem;
-  }
-
-  .system-card i {
-    font-size: .55rem;
-  }
-
-  .card-workflow {
-    display: none;
-  }
-
-  .card-product {
-    left: auto;
-    right: 1rem;
-  }
-
-  .impact-strip {
-    font-size: .58rem;
-    letter-spacing: .06em;
+  .composition-card,
+  .composition-large {
+    min-height: 170px;
   }
 
   .statement h2 {
     position: static;
-  }
-
-  .stage-copy {
-    font-size: clamp(4.2rem, 21vw, 7rem);
-  }
-
-  .monogram {
-    font-size: clamp(4.4rem, 24vw, 7rem);
-  }
-
-  .orbit.one {
-    width: 260px;
-    height: 120px;
-  }
-
-  .orbit.two {
-    width: 340px;
-    height: 165px;
-  }
-
-  .hero-stage p {
-    right: 1rem;
-    bottom: 1rem;
-    max-width: 180px;
-    font-size: .58rem;
   }
 
   .stats {
@@ -2413,10 +2152,6 @@ dialog li {
   .availability span,
   .hero-title em,
   .hero-title em::after,
-  .hero-stage::before,
-  .stage-copy,
-  .monogram,
-  .orbit,
   .project::before,
   .art-jdis i,
   .art-cdcrb i,
@@ -2437,9 +2172,7 @@ dialog li {
   .project,
   .expertise-row,
   .expertise-row b,
-  .chat-panel,
-  .hero-stage .monogram,
-  .hero-stage .orbit {
+  .chat-panel {
     transition: none;
   }
 }

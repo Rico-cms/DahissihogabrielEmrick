@@ -88,23 +88,6 @@ const countObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
 }),{threshold:.5});
 countObserver.observe(stats);
 
-const stage=document.querySelector(".hero-stage");
-stage.addEventListener("pointermove",event=>{
-  if(reducedMotion)return;
-  const rect=stage.getBoundingClientRect();
-  const x=(event.clientX-rect.left)/rect.width;
-  const y=(event.clientY-rect.top)/rect.height;
-  stage.style.setProperty("--stage-x",`${x*100}%`);
-  stage.style.setProperty("--stage-y",`${y*100}%`);
-  stage.querySelector(".monogram").style.transform=`translate(${(x-.5)*18}px,${(y-.5)*14}px) rotate(${(x-.5)*3}deg)`;
-  stage.querySelector(".orbit.one").style.transform=`rotate(${-18+(x-.5)*10}deg) translate(${(x-.5)*10}px,${(y-.5)*8}px)`;
-  stage.querySelector(".orbit.two").style.transform=`rotate(${-18-(x-.5)*8}deg) translate(${-(x-.5)*12}px,${-(y-.5)*8}px)`;
-});
-stage.addEventListener("pointerleave",()=>{
-  stage.querySelector(".monogram").style.transform="";
-  stage.querySelectorAll(".orbit").forEach(orbit=>orbit.style.transform="");
-});
-
 const projectCursor=document.querySelector(".project-cursor");
 if(!matchMedia("(pointer: coarse)").matches){
   addEventListener("pointermove",event=>{projectCursor.style.left=`${event.clientX}px`;projectCursor.style.top=`${event.clientY}px`});
