@@ -1,10 +1,10 @@
 const projects={
-  jdis:{role:"Project Manager & UX/UI",title:"JDIS — Digital System",intro:"Chez JALO Logistics, je structure et pilote des solutions digitales destinées à optimiser la chaîne logistique.",problem:"Les opérations avaient besoin d’un cadre plus lisible : priorités, responsabilités, parcours métiers et indicateurs de suivi.",result:"Un système de pilotage plus clair, capable d’aligner les équipes sur les livrables, les écrans critiques et les décisions opérationnelles.",points:["Gouvernance du projet et consolidation des besoins métiers.","Tableaux de bord exécutifs, calendriers de livraison et reporting.","Parcours critiques et optimisation des écrans métiers.","Modernisation d’un réseau logistique présent dans une dizaine de pays."]},
-  cdcrb:{role:"Direction artistique",title:"CDCRB — Patrimoine",intro:"Une identité contemporaine pour valoriser l’héritage des danses cérémonielles et royales du Bénin.",problem:"Le défi était de moderniser une expression culturelle forte sans effacer son origine, ses codes et sa dignité.",result:"Une direction graphique plus actuelle, identifiable et capable de porter le patrimoine auprès de nouveaux publics.",points:["Modernisation respectueuse de l’ancrage historique.","Conception de la ligne graphique globale.","Harmonisation de l’identité pour renforcer le rayonnement culturel."]},
-  africaine:{role:"Brand design",title:"Africaine Vie Bénin",intro:"Refonte de la présence digitale et valorisation des offres d’une institution majeure de l’assurance.",problem:"La marque devait rendre ses offres plus visibles et plus compréhensibles dans des formats digitaux rapides.",result:"Une présence plus cohérente, plus institutionnelle et plus engageante sur les supports sociaux et print.",points:["Pilotage des assets sociaux et print.","Système de contenus adapté aux différents canaux.","Engagement accru et meilleure reconnaissance de marque."]},
-  nokoue:{role:"Product design",title:"Le Petit Nokoué",intro:"Optimisation de l’expérience utilisateur d’une plateforme digitale en croissance.",problem:"L’expérience devait gagner en fluidité, en cohérence visuelle et en simplicité pour accompagner l’usage réel.",result:"Des frictions mieux identifiées, un design system plus stable et une collaboration plus nette avec le développement.",points:["Audit des interfaces et identification des frictions.","Collaboration directe avec les équipes de développement.","Évolution du design system pour gagner en cohérence."]},
-  busybee:{role:"Brand design",title:"The Busy Bee School",intro:"Modernisation de l’image d’un établissement bilingue et clarification de sa communication.",problem:"L’école avait besoin d’une expression plus cohérente pour parler aux parents et renforcer sa perception de sérieux.",result:"Des supports plus homogènes, une communication plus lisible et une présence renforcée auprès des publics ciblés.",points:["Uniformisation des supports de communication.","Contenus sociaux pensés pour les parents d’élèves.","Visibilité accrue auprès des publics francophones et anglophones."]},
-  lyz:{role:"Développement frontend",title:"Lyz Digital",intro:"Intégration d’interfaces web fidèles, rapides et adaptées à toutes les tailles d’écran.",problem:"Les maquettes devaient être traduites en interfaces propres, responsives et performantes.",result:"Des pages plus stables, lisibles sur mobile et alignées avec l’intention design initiale.",points:["Intégration HTML, CSS et JavaScript.","Optimisation de la performance et du responsive.","Collaboration étroite avec les équipes design."]}
+  jdis:{role:"Project Manager & UX/UI",title:"JDIS — Digital System",intro:"Chez JALO Logistics, je structure et pilote des solutions digitales destinées à optimiser la chaîne logistique.",points:["Gouvernance du projet et consolidation des besoins métiers.","Tableaux de bord exécutifs, calendriers de livraison et reporting.","Parcours critiques et optimisation des écrans métiers.","Modernisation d’un réseau logistique présent dans une dizaine de pays."]},
+  cdcrb:{role:"Direction artistique",title:"CDCRB — Patrimoine",intro:"Une identité contemporaine pour valoriser l’héritage des danses cérémonielles et royales du Bénin.",points:["Modernisation respectueuse de l’ancrage historique.","Conception de la ligne graphique globale.","Harmonisation de l’identité pour renforcer le rayonnement culturel."]},
+  africaine:{role:"Brand design",title:"Africaine Vie Bénin",intro:"Refonte de la présence digitale et valorisation des offres d’une institution majeure de l’assurance.",points:["Pilotage des assets sociaux et print.","Système de contenus adapté aux différents canaux.","Engagement accru et meilleure reconnaissance de marque."]},
+  nokoue:{role:"Product design",title:"Le Petit Nokoué",intro:"Optimisation de l’expérience utilisateur d’une plateforme digitale en croissance.",points:["Audit des interfaces et identification des frictions.","Collaboration directe avec les équipes de développement.","Évolution du design system pour gagner en cohérence."]},
+  busybee:{role:"Brand design",title:"The Busy Bee School",intro:"Modernisation de l’image d’un établissement bilingue et clarification de sa communication.",points:["Uniformisation des supports de communication.","Contenus sociaux pensés pour les parents d’élèves.","Visibilité accrue auprès des publics francophones et anglophones."]},
+  lyz:{role:"Développement frontend",title:"Lyz Digital",intro:"Intégration d’interfaces web fidèles, rapides et adaptées à toutes les tailles d’écran.",points:["Intégration HTML, CSS et JavaScript.","Optimisation de la performance et du responsive.","Collaboration étroite avec les équipes design."]}
 };
 const dialog=document.querySelector("#project-dialog");
 document.querySelectorAll("[data-project]").forEach(button=>button.addEventListener("click",()=>{
@@ -12,8 +12,6 @@ document.querySelectorAll("[data-project]").forEach(button=>button.addEventListe
   document.querySelector("#dialog-role").textContent=project.role;
   document.querySelector("#dialog-title").textContent=project.title;
   document.querySelector("#dialog-intro").textContent=project.intro;
-  document.querySelector("#dialog-problem").textContent=project.problem;
-  document.querySelector("#dialog-result").textContent=project.result;
   document.querySelector("#dialog-points").innerHTML=project.points.map(point=>`<li>${point}</li>`).join("");
   dialog.showModal();
 }));
@@ -87,6 +85,23 @@ const countObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
   countObserver.unobserve(entry.target);
 }),{threshold:.5});
 countObserver.observe(stats);
+
+const stage=document.querySelector(".hero-stage");
+stage.addEventListener("pointermove",event=>{
+  if(reducedMotion)return;
+  const rect=stage.getBoundingClientRect();
+  const x=(event.clientX-rect.left)/rect.width;
+  const y=(event.clientY-rect.top)/rect.height;
+  stage.style.setProperty("--stage-x",`${x*100}%`);
+  stage.style.setProperty("--stage-y",`${y*100}%`);
+  stage.querySelector(".monogram").style.transform=`translate(${(x-.5)*18}px,${(y-.5)*14}px) rotate(${(x-.5)*3}deg)`;
+  stage.querySelector(".orbit.one").style.transform=`rotate(${-18+(x-.5)*10}deg) translate(${(x-.5)*10}px,${(y-.5)*8}px)`;
+  stage.querySelector(".orbit.two").style.transform=`rotate(${-18-(x-.5)*8}deg) translate(${-(x-.5)*12}px,${-(y-.5)*8}px)`;
+});
+stage.addEventListener("pointerleave",()=>{
+  stage.querySelector(".monogram").style.transform="";
+  stage.querySelectorAll(".orbit").forEach(orbit=>orbit.style.transform="");
+});
 
 const projectCursor=document.querySelector(".project-cursor");
 if(!matchMedia("(pointer: coarse)").matches){
@@ -197,12 +212,6 @@ function normalizeQuestion(text){
 function answerQuestion(question){
   const q=normalizeQuestion(question);
   if(!q)return {source:"local",text:"Pose-moi une question sur Gabriel, ses projets, ses compétences ou ses coordonnées."};
-  if(q.includes("resume")||q.includes("pitch")||q.includes("presente")||q.includes("profil")){
-    return {source:"local",text:"Gabriel Emrick Dahissiho est IT Project Manager basé à Abidjan. Son profil combine pilotage de projets digitaux, UX/UI design, transformation opérationnelle et direction créative. Son angle fort : transformer des situations floues en systèmes clairs, livrables et utilisables."};
-  }
-  if(q.includes("recruter")||q.includes("embaucher")||q.includes("pourquoi lui")||q.includes("valeur")||q.includes("apporte")){
-    return {source:"local",text:"La valeur d’Emrick est dans le pont entre stratégie, exécution et design. Il peut cadrer un besoin, parler aux équipes métier, structurer un workflow, challenger une interface et garder le projet orienté résultat."};
-  }
   if(q.includes("bonjour")||q.includes("salut")||q.includes("hello")||q.includes("hey")){
     return {source:"local",text:"Bonjour, je suis Nia, l’assistant d’Emrick. Je peux aider à comprendre son profil, ses projets, ou répondre à des questions sur la gestion de projet, l’UX/UI, le branding et la stratégie digitale."};
   }
@@ -216,7 +225,7 @@ function answerQuestion(question){
     return {source:"local",text:"Les projets les plus orientés UX/UI sont Le Petit Nokoué, pour l’audit UX et l’évolution du design system, et JDIS, pour la structuration d’écrans métiers et de parcours critiques."};
   }
   if(q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")||(q.includes("projet")&&isAboutProfile(q))){
-    return {source:"local",text:"Ses projets couvrent JDIS chez Jalo Logistics, CDCRB, Africaine Vie, Le Petit Nokoué, The Busy Bee School et Lyz Digital. Le plus orienté pilotage est JDIS ; le plus UX produit est Le Petit Nokoué ; les plus brand/design sont CDCRB, Africaine Vie et Busy Bee."};
+    return {source:"local",text:"Ses projets couvrent notamment JDIS chez Jalo Logistics, CDCRB, Africaine Vie, Le Petit Nokoué, The Busy Bee School et Lyz Digital. La section Projets permet d’ouvrir chaque cas."};
   }
   if(q.includes("competence")||q.includes("expertise")||((q.includes("ux")||q.includes("ui")||q.includes("design")||q.includes("branding")||q.includes("strategie"))&&isAboutProfile(q))){
     return {source:"local",text:"Ses trois grands leviers sont la gestion et transformation digitale, la stratégie UX/UI, et le branding/direction créative."};
@@ -235,15 +244,6 @@ function answerQuestion(question){
   }
   if(q.includes("chaos")||q.includes("animation")||q.includes("interactif")){
     return {source:"local",text:"Petit indice : clique sur le mot « chaos » dans le hero. Le site garde des micro-interactions utiles, sans détour par une expérience 3D instable."};
-  }
-  if(q.includes("project management")||q.includes("gestion de projet")||q.includes("workflow")||q.includes("methode")||q.includes("agile")){
-    return {source:"local",text:"En gestion de projet, Emrick met l’accent sur trois choses : clarifier le problème, rendre les responsabilités visibles, puis transformer l’avancement en décisions concrètes. Les outils comptent, mais le système de travail compte encore plus."};
-  }
-  if(q.includes("ux")||q.includes("ui")||q.includes("interface")||q.includes("experience utilisateur")){
-    return {source:"local",text:"Pour l’UX/UI, son approche part de l’usage réel : repérer les frictions, simplifier les parcours, hiérarchiser l’information puis produire des interfaces que les équipes peuvent réellement maintenir."};
-  }
-  if(q.includes("branding")||q.includes("marque")||q.includes("identite")||q.includes("direction creative")){
-    return {source:"local",text:"En branding, Emrick cherche moins l’effet décoratif que la cohérence : une identité doit être reconnaissable, utilisable sur plusieurs supports et fidèle au positionnement du projet."};
   }
   return {source:"llm",text:"Je n’ai pas de réponse locale précise."};
 }
@@ -279,10 +279,7 @@ async function askChat(question){
   const answer=answerQuestion(question);
   if(answer.source==="local"){
     chatHistory.push({role:"user",content:question},{role:"assistant",content:answer.text});
-    setTimeout(()=>{
-      addMessage(answer.text,"bot");
-      updateSuggestions(question);
-    },180);
+    setTimeout(()=>addMessage(answer.text,"bot"),180);
     return;
   }
   const typing=addMessage("Je réfléchis…","bot thinking");
@@ -291,24 +288,11 @@ async function askChat(question){
     typing.textContent=llmAnswer;
     typing.className="bot";
     chatHistory.push({role:"user",content:question},{role:"assistant",content:llmAnswer});
-    updateSuggestions(question);
   }catch(error){
     typing.textContent="Le LLM ne répond pas pour le moment. Réessaie plus tard ou pose une question sur les projets, compétences, parcours ou contacts.";
     typing.className="bot";
   }
   if(chatHistory.length>10)chatHistory.splice(0,chatHistory.length-10);
-}
-
-function updateSuggestions(question){
-  const q=normalizeQuestion(question);
-  const suggestions=q.includes("projet")||q.includes("jdis")
-    ?["Quel projet UX ?","Son rôle sur JDIS ?","Comment le contacter ?"]
-    :q.includes("recruter")||q.includes("profil")
-      ?["Ses compétences clés ?","Ses outils ?","Voir ses projets"]
-      :["Résume son profil","Pourquoi le recruter ?","Quel projet UX ?","Comment le contacter ?"];
-  const container=document.querySelector(".chat-suggestions");
-  container.innerHTML=suggestions.map(item=>`<button type="button">${item}</button>`).join("");
-  container.querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>askChat(button.textContent)));
 }
 
 chatToggle.addEventListener("click",()=>{
@@ -334,4 +318,6 @@ chatForm.addEventListener("submit",event=>{
   askChat(question);
 });
 
-updateSuggestions("");
+document.querySelectorAll(".chat-suggestions button").forEach(button=>button.addEventListener("click",()=>{
+  askChat(button.textContent);
+}));
