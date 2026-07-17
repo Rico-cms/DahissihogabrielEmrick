@@ -809,175 +809,6 @@ em {
   transition: max-height .4s cubic-bezier(.16, 1, .3, 1), opacity .3s, margin .3s;
 }
 
-.house-teaser {
-  position: relative;
-  padding: 8rem 0;
-  overflow: hidden;
-  border-top: 1px solid var(--line);
-  background: #e9e3d8;
-}
-
-.house-teaser::before {
-  content: "";
-  position: absolute;
-  width: 42rem;
-  height: 42rem;
-  right: -16rem;
-  top: -18rem;
-  border-radius: 50%;
-  background: #ff4d2e18;
-  filter: blur(4rem);
-  pointer-events: none;
-}
-
-.house-teaser-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(280px, .72fr) minmax(0, 1.28fr);
-  align-items: center;
-  gap: clamp(3rem, 7vw, 7rem);
-}
-
-.house-teaser-copy .index {
-  margin: 0 0 2rem;
-}
-
-.house-teaser-copy h2 {
-  margin: 0;
-  font: 700 clamp(3rem, 5.4vw, 5.8rem)/.92 Syne, sans-serif;
-  letter-spacing: -.055em;
-}
-
-.house-teaser-copy > p:not(.index) {
-  max-width: 34rem;
-  margin: 2rem 0;
-  color: var(--muted);
-  line-height: 1.75;
-}
-
-.house-teaser-copy ul {
-  margin: 0 0 2.25rem;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-
-.house-teaser-copy li {
-  display: grid;
-  grid-template-columns: 2.4rem 1fr;
-  gap: .7rem;
-  padding: .8rem 0;
-  border-bottom: 1px solid var(--line);
-  font-size: .8rem;
-}
-
-.house-teaser-copy li span {
-  color: var(--accent);
-  font: 500 .62rem "DM Mono";
-}
-
-.house-enter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.1rem;
-  background: var(--ink);
-  color: #fff;
-  font-weight: 700;
-  transition: background .25s, transform .25s;
-}
-
-.house-enter:hover {
-  background: var(--accent);
-  transform: translateY(-3px);
-}
-
-.house-enter span {
-  font: 500 .62rem "DM Mono";
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.house-teaser-visual {
-  position: relative;
-  display: block;
-  min-height: 34rem;
-  overflow: hidden;
-  border-radius: 1.25rem;
-  background: #f6eee0;
-  box-shadow: 0 2rem 5rem #2c241b18;
-  isolation: isolate;
-}
-
-.house-teaser-visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 55%, #171713b5 100%);
-  pointer-events: none;
-}
-
-.house-teaser-visual img {
-  width: 100%;
-  height: 100%;
-  min-height: 34rem;
-  object-fit: cover;
-  transition: transform .8s cubic-bezier(.16, 1, .3, 1), filter .5s;
-}
-
-.house-teaser-visual:hover img {
-  transform: scale(1.035);
-  filter: saturate(1.08);
-}
-
-.house-teaser-visual > strong {
-  position: absolute;
-  z-index: 2;
-  right: 1.5rem;
-  bottom: 1.35rem;
-  color: #fff;
-  font: 600 .7rem "DM Mono";
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.house-hotspot {
-  position: absolute;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: .45rem;
-  padding: .42rem .58rem;
-  border: 1px solid #1717132e;
-  border-radius: 999px;
-  background: #f1efe8dc;
-  backdrop-filter: blur(8px);
-  font: 500 .56rem "DM Mono";
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  transition: transform .3s, background .3s;
-}
-
-.house-hotspot::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px #ff4d2e1e;
-}
-
-.house-teaser-visual:hover .house-hotspot {
-  transform: translateY(-4px);
-  background: #fff;
-}
-
-.house-hotspot.one { left: 20%; top: 19%; }
-.house-hotspot.two { right: 16%; top: 24%; }
-.house-hotspot.three { left: 15%; bottom: 23%; }
-.house-hotspot.four { right: 12%; bottom: 26%; }
-
 .expertise-row.open .expertise-detail {
   max-height: 100px;
   opacity: 1;
@@ -1791,7 +1622,6 @@ dialog li {
   }
 
   .expertise,
-  .house-teaser,
   .journey,
   .projects,
   .credentials {
@@ -1801,16 +1631,6 @@ dialog li {
 
   .project-grid {
     grid-template-columns: 1fr;
-  }
-
-  .house-teaser-grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
-  .house-teaser-visual,
-  .house-teaser-visual img {
-    min-height: clamp(24rem, 72vw, 34rem);
   }
 
   .project,
@@ -1905,23 +1725,6 @@ dialog li {
   .hero-stage {
     height: 270px;
     border-radius: 1rem;
-  }
-
-  .house-teaser {
-    padding: 5rem 0;
-  }
-
-  .house-teaser-copy h2 {
-    font-size: clamp(2.8rem, 14vw, 4.3rem);
-  }
-
-  .house-teaser-visual,
-  .house-teaser-visual img {
-    min-height: 22rem;
-  }
-
-  .house-hotspot {
-    font-size: .48rem;
   }
 
   .stage-copy {
