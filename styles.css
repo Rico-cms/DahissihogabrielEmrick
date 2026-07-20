@@ -314,157 +314,6 @@ button {
   50% { box-shadow: 0 0 0 9px #4faf350f; transform: scale(1.15); }
 }
 
-.geo-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(290px, 420px);
-  gap: 1.5rem;
-  align-items: center;
-  margin-top: 1.35rem;
-  border: 1px solid var(--line);
-  border-radius: 1.15rem;
-  background: linear-gradient(135deg, #f7f3eab8, #fff7 55%, #ff4b3320);
-  padding: 1rem 1rem 1rem 1.15rem;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-}
-
-.geo-copy {
-  display: grid;
-  gap: .45rem;
-}
-
-.geo-eyebrow {
-  font: 500 .62rem "DM Mono";
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--muted);
-}
-
-.geo-copy strong {
-  font: 800 clamp(1.7rem, 3vw, 2.8rem) Syne;
-  letter-spacing: -.055em;
-}
-
-.geo-copy p {
-  max-width: 42rem;
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-.geo-map {
-  position: relative;
-  display: grid;
-  min-height: 150px;
-  border: 0;
-  border-radius: .95rem;
-  background:
-    radial-gradient(circle at var(--geo-x, 28%) var(--geo-y, 52%), #ff4b3324, transparent 32%),
-    linear-gradient(135deg, #171713, #2b2a24);
-  color: var(--paper);
-  cursor: pointer;
-  overflow: hidden;
-  transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s;
-}
-
-.geo-map:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 50px #17171324;
-}
-
-.geo-map svg {
-  width: 100%;
-  height: 100%;
-  min-height: 150px;
-}
-
-.geo-map path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.map-shape path {
-  fill: #f3eee3;
-  stroke: #f3eee3;
-  stroke-width: 2;
-  opacity: .24;
-  transition: opacity .55s, transform .55s cubic-bezier(.16, 1, .3, 1);
-}
-
-.map-shape.active path {
-  opacity: .92;
-  transform: translateY(-2px);
-}
-
-.map-shape {
-  transform-origin: center;
-  transition: opacity .55s, filter .55s;
-}
-
-.map-shape:not(.active) {
-  opacity: .38;
-  filter: blur(.2px);
-}
-
-.geo-route {
-  fill: none;
-  stroke: #ff4b33;
-  stroke-width: 2;
-  stroke-dasharray: 8 9;
-  animation: geo-route 2.8s linear infinite;
-}
-
-.geo-pin {
-  fill: var(--accent);
-  stroke: #fff;
-  stroke-width: 3;
-}
-
-.geo-pulse {
-  fill: none;
-  stroke: #ff4b33;
-  stroke-width: 2;
-  opacity: .75;
-  transform-origin: center;
-  animation: geo-pulse 2s ease-out infinite;
-}
-
-.geo-node {
-  fill: #f3eee3;
-  opacity: .65;
-}
-
-.geo-map text {
-  fill: #f3eee3;
-  font: 700 12px "DM Mono";
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.geo-map > span {
-  position: absolute;
-  right: .85rem;
-  bottom: .75rem;
-  border: 1px solid #ffffff36;
-  border-radius: 999px;
-  background: #ffffff12;
-  padding: .5rem .7rem;
-  font: 600 .62rem "DM Mono";
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  backdrop-filter: blur(10px);
-}
-
-@keyframes geo-route {
-  to { stroke-dashoffset: -34; }
-}
-
-@keyframes geo-pulse {
-  0% { opacity: .75; transform: scale(.72); }
-  100% { opacity: 0; transform: scale(1.35); }
-}
-
 .hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.28fr) minmax(290px, .72fr);
@@ -1854,11 +1703,6 @@ dialog li {
     margin: 2rem 0 2.5rem;
   }
 
-  .geo-card {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
   .hero h1 {
     font-size: clamp(3.2rem, 14vw, 6.2rem);
   }
@@ -1986,29 +1830,6 @@ dialog li {
     align-items: flex-start;
     font-size: .61rem;
     line-height: 1.5;
-  }
-
-  .geo-card {
-    margin-top: 1rem;
-    padding: .9rem;
-    border-radius: 1rem;
-  }
-
-  .geo-copy strong {
-    font-size: 1.65rem;
-  }
-
-  .geo-copy p {
-    font-size: .92rem;
-  }
-
-  .geo-map,
-  .geo-map svg {
-    min-height: 128px;
-  }
-
-  .geo-map text {
-    font-size: 10px;
   }
 
   .hero {
@@ -2294,8 +2115,6 @@ dialog li {
   .stage-copy,
   .monogram,
   .orbit,
-  .geo-route,
-  .geo-pulse,
   .project::before,
   .art-jdis i,
   .art-cdcrb i,
