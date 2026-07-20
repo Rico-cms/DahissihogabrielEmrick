@@ -235,7 +235,7 @@ function answerQuestion(question){
     return {source:"local",text:"Oui. Emrick est basé à Abidjan et ouvert à des opportunités où il peut structurer, piloter et améliorer des produits ou systèmes digitaux. Le bon terrain pour lui : projet ambitieux, besoin flou, équipe à aligner, résultat à livrer."};
   }
   if(q.includes("contact")||q.includes("email")||q.includes("mail")||q.includes("telephone")||q.includes("appel")||q.includes("rdv")||q.includes("creneau")){
-    return {source:"local",text:"Contact direct : dahissihogabriel@gmail.com. Téléphone : +225 05 96 48 93 43. Le plus simple : utiliser le bouton de réservation du site si tu veux cadrer un échange proprement."};
+    return {source:"local",text:"Contact direct : dahissihogabriel@gmail.com. Téléphone : +225 05 96 48 93 43. GitHub : https://github.com/rico-cms. Le plus simple : utiliser le bouton de réservation du site si tu veux cadrer un échange proprement."};
   }
   if((q.includes("lequel")||q.includes("quel projet")||q.includes("projet"))&&(q.includes("ux")||q.includes("ui")||q.includes("produit")||q.includes("product"))&&isAboutProfile(q)){
     return {source:"local",text:"Pour l’UX/UI : Le Petit Nokoué montre l’audit, les frictions et le design system. JDIS montre une UX plus opérationnelle : écrans métiers, parcours critiques, besoin de clarté dans un contexte logistique."};

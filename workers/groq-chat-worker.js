@@ -56,7 +56,7 @@ Informations fiables :
   - Lyz Digital : développement frontend, intégration web, responsive.
 - Parcours : Project Manager & UX/UI Designer chez Jalo Logistics, Directeur artistique chez SÆKUM, Product Designer chez Le Petit Nokoué.
 - Outils : Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads, ChatGPT.
-- Contact : dahissihogabriel@gmail.com, +225 05 96 48 93 43, LinkedIn, formulaire Tally.
+- Contact : dahissihogabriel@gmail.com, +225 05 96 48 93 43, LinkedIn, GitHub https://github.com/rico-cms, formulaire Tally.
 - Si une question sort totalement des domaines ci-dessus, réponds brièvement et ramène vers les sujets où tu peux aider.
 `;
 
