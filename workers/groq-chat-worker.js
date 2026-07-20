@@ -1,9 +1,12 @@
-const ALLOWED_ORIGINS = [
+const ALLOWED_ORIGINS = new Set([
   "https://rico-cms.github.io",
+  "https://rico-cms.github.io/DahissihogabrielEmrick",
+  "https://dahissihogabriel.com",
+  "https://www.dahissihogabriel.com",
   "null",
   "http://localhost:8787",
   "http://127.0.0.1:8787"
-];
+]);
 
 const PROFILE_CONTEXT = `
 Tu t'appelles Nia.
@@ -56,7 +59,7 @@ Informations fiables :
 `;
 
 function corsHeaders(origin) {
-  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allowedOrigin = ALLOWED_ORIGINS.has(origin) || origin.endsWith(".github.io") ? origin : "https://rico-cms.github.io";
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",

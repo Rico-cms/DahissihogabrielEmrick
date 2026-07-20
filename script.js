@@ -408,7 +408,7 @@ async function askLlm(question){
       history:chatHistory.slice(-8)
     })
   });
-  if(!response.ok)throw new Error("LLM request failed");
+  if(!response.ok)throw new Error(`LLM request failed: ${response.status}`);
   const data=await response.json();
   return completePossiblyTruncatedAnswer(data.answer);
 }
@@ -432,6 +432,7 @@ async function askChat(question){
     chatHistory.push({role:"user",content:question},{role:"assistant",content:llmAnswer});
     renderSuggestions(nextSuggestions(question));
   }catch(error){
+    console.warn("Nia LLM unavailable",error);
     typing.className="bot";
     typing.innerHTML=formatBotAnswer("Le LLM ne répond pas pour le moment. Je reste utile en local : demande-moi son pitch, pourquoi le recruter, ses projets forts ou ses coordonnées.");
     renderSuggestions(["Pitch en 20 secondes","Pourquoi le recruter ?","Comment le contacter ?"]);
