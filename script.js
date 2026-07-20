@@ -58,8 +58,6 @@ if(!reducedMotion){
 
 const geoCard=document.querySelector("[data-location-card]");
 if(geoCard){
-  const geoMotion=geoCard.querySelector(".geo-screen img");
-  if(reducedMotion&&geoMotion)geoMotion.src="assets/regional-signal-still.png";
   const geoStates={
     abidjan:{
       title:"Abidjan",
