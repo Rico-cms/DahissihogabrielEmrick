@@ -3,6 +3,8 @@ const ALLOWED_ORIGINS = new Set([
   "https://rico-cms.github.io/DahissihogabrielEmrick",
   "https://dahissihogabriel.com",
   "https://www.dahissihogabriel.com",
+  "https://bookemrick.online",
+  "https://www.bookemrick.online",
   "null",
   "http://localhost:8787",
   "http://127.0.0.1:8787"
