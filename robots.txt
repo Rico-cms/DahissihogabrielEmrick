@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rico-cms.github.io/DahissihogabrielEmrick/sitemap.xml
+Sitemap: https://bookemrick.online/sitemap.xml
