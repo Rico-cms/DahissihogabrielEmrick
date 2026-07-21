@@ -1348,28 +1348,6 @@ em {
   letter-spacing: .08em;
 }
 
-.github-project-source {
-  opacity: .78;
-}
-
-.github-project-source::after {
-  content: "Source";
-  position: absolute;
-  right: .85rem;
-  bottom: .85rem;
-  border: 1px solid #ffffff24;
-  border-radius: 999px;
-  color: #d7d1c5;
-  padding: .35rem .55rem;
-  font: 800 .55rem "DM Mono";
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-.github-project-source:hover {
-  opacity: 1;
-}
-
 .github-project:hover {
   border-color: #ffffff55;
   background:
@@ -1403,8 +1381,7 @@ em {
   color: var(--accent);
 }
 
-.github-project-live b,
-.github-project-source b {
+.github-project-live b {
   padding-right: 3.4rem;
 }
 

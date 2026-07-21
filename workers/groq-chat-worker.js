@@ -58,12 +58,11 @@ Informations fiables :
   - L’Odyssée du Code : https://l-odyss-e-du-code.vercel.app/
   - Agence Ecofin refonte : https://agence-ecofin-refonte.vercel.app/
   - Skillsmaster : https://skillsmaster-henna.vercel.app/
-- Sources/prototypes sans lien live confirmé :
-  - PortfolioLens : analyse de portfolios développeur avec recommandations concrètes.
-  - Jalo Logistics : site web corporate pour activité logistique.
-  - PulseLine : MVP React interactif orienté expérience produit.
-  - EduGest : concept SaaS de gestion éducative.
-  - KAPITA : plateforme africaine d’equity crowdfunding.
+  - Jalo Logistics : https://rico-cms.github.io/Jalo-Logistics/
+  - KAPITA : https://rico-cms.github.io/KAPITA/
+  - EduGest : https://rico-cms.github.io/EduGest/
+  - ReVal Africa : https://rico-cms.github.io/ReVal-Africa/
+  - AutoCarnet : https://rico-cms.github.io/AutoCarnet/
 - Parcours : Project Manager & UX/UI Designer chez Jalo Logistics, Directeur artistique chez SÆKUM, Product Designer chez Le Petit Nokoué.
 - Outils : Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads, ChatGPT.
 - Contact : dahissihogabriel@gmail.com, +225 05 96 48 93 43, LinkedIn, GitHub https://github.com/rico-cms, formulaire Tally.
