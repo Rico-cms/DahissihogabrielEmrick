@@ -139,20 +139,30 @@ if(!matchMedia("(pointer: coarse)").matches){
 
 const chaosWord=document.querySelector("#chaos-word");
 const particleCanvas=document.querySelector("#particle-canvas");
-const particleContext=particleCanvas.getContext("2d");
+let particleContext=null;
 let particleAnimation=null;
+let particleCanvasSized=false;
 
 function sizeParticleCanvas(){
+  if(!particleContext)return;
   const ratio=Math.min(devicePixelRatio||1,2);
   particleCanvas.width=innerWidth*ratio;
   particleCanvas.height=innerHeight*ratio;
   particleContext.setTransform(ratio,0,0,ratio,0,0);
 }
-sizeParticleCanvas();
-addEventListener("resize",sizeParticleCanvas);
+
+function ensureParticleCanvas(){
+  if(!particleContext)particleContext=particleCanvas.getContext("2d",{alpha:true});
+  if(!particleCanvasSized){
+    particleCanvasSized=true;
+    sizeParticleCanvas();
+    addEventListener("resize",sizeParticleCanvas,{passive:true});
+  }
+}
 
 function transformChaos(){
   if(reducedMotion||particleAnimation)return;
+  ensureParticleCanvas();
   const rect=chaosWord.getBoundingClientRect();
   const style=getComputedStyle(chaosWord);
   const columns=Math.max(18,Math.round(rect.width/5));
@@ -217,6 +227,7 @@ const LLM_ENDPOINT="https://gabriel-portfolio-chat.dahissihogabriel.workers.dev"
 const chatHistory=[];
 const profileIntentWords=["gabriel","emrick","il ","lui","son ","ses ","profil","portfolio","cv","experience","parcours","competence","expertise"];
 const defaultSuggestions=["Pitch en 20 secondes","Pourquoi le recruter ?","Quel projet prouve son niveau ?","Comment le contacter ?"];
+let suggestionsRendered=false;
 
 function isAboutProfile(q){
   return profileIntentWords.some(word=>q.includes(word));
@@ -299,6 +310,7 @@ function nextSuggestions(question){
 
 function renderSuggestions(items=defaultSuggestions){
   const container=document.querySelector(".chat-suggestions");
+  suggestionsRendered=true;
   container.replaceChildren(...items.map(item=>{
     const button=document.createElement("button");
     button.type="button";
@@ -428,7 +440,10 @@ chatToggle.addEventListener("click",()=>{
   miniChat.classList.toggle("open",opening);
   chatToggle.setAttribute("aria-expanded",String(opening));
   chatPanel.setAttribute("aria-hidden",String(!opening));
-  if(opening)setTimeout(()=>chatInput.focus(),120);
+  if(opening){
+    if(!suggestionsRendered)renderSuggestions();
+    setTimeout(()=>chatInput.focus(),120);
+  }
 });
 
 chatClose.addEventListener("click",()=>{
@@ -445,5 +460,3 @@ chatForm.addEventListener("submit",event=>{
   chatInput.value="";
   askChat(question);
 });
-
-renderSuggestions();
