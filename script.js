@@ -12,7 +12,12 @@ document.querySelectorAll("[data-project]").forEach(button=>button.addEventListe
   document.querySelector("#dialog-role").textContent=project.role;
   document.querySelector("#dialog-title").textContent=project.title;
   document.querySelector("#dialog-intro").textContent=project.intro;
-  document.querySelector("#dialog-points").innerHTML=project.points.map(point=>`<li>${point}</li>`).join("");
+  const points=document.querySelector("#dialog-points");
+  points.replaceChildren(...project.points.map(point=>{
+    const item=document.createElement("li");
+    item.textContent=point;
+    return item;
+  }));
   dialog.showModal();
 }));
 document.querySelector(".dialog-close").addEventListener("click",()=>dialog.close());
@@ -28,9 +33,14 @@ if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
 
 const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const progress=document.querySelector(".scroll-progress");
+let scrollFrame=null;
 addEventListener("scroll",()=>{
-  const max=document.documentElement.scrollHeight-innerHeight;
-  progress.style.transform=`scaleX(${max>0?scrollY/max:0})`;
+  if(scrollFrame)return;
+  scrollFrame=requestAnimationFrame(()=>{
+    const max=document.documentElement.scrollHeight-innerHeight;
+    progress.style.transform=`scaleX(${max>0?scrollY/max:0})`;
+    scrollFrame=null;
+  });
 },{passive:true});
 
 if(!reducedMotion){
@@ -283,8 +293,13 @@ function nextSuggestions(question){
 
 function renderSuggestions(items=defaultSuggestions){
   const container=document.querySelector(".chat-suggestions");
-  container.innerHTML=items.map(item=>`<button type="button">${item}</button>`).join("");
-  container.querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>askChat(button.textContent)));
+  container.replaceChildren(...items.map(item=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.textContent=item;
+    button.addEventListener("click",()=>askChat(button.textContent));
+    return button;
+  }));
 }
 
 function addMessage(text,type="bot"){
@@ -359,14 +374,17 @@ async function askLlm(question){
   if(!LLM_ENDPOINT){
     return "Je peux répondre avec un LLM dès qu’un endpoint sécurisé est branché. Pour l’instant, je reste en mode FAQ locale pour éviter d’exposer une clé API dans le site.";
   }
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),12000);
   const response=await fetch(LLM_ENDPOINT,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
+    signal:controller.signal,
     body:JSON.stringify({
       message:question,
       history:chatHistory.slice(-8)
     })
-  });
+  }).finally(()=>clearTimeout(timeout));
   if(!response.ok)throw new Error(`LLM request failed: ${response.status}`);
   const data=await response.json();
   return completePossiblyTruncatedAnswer(data.answer);
