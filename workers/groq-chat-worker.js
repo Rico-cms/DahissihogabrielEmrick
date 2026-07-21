@@ -54,15 +54,16 @@ Informations fiables :
   - Le Petit Nokoué : product design, audit UX, tests utilisateurs, design system.
   - The Busy Bee School : brand design, école bilingue, supports de communication.
   - Lyz Digital : développement frontend, intégration web, responsive.
-- Projets GitHub publics à mettre en avant :
+- Projets live confirmés :
+  - L’Odyssée du Code : https://l-odyss-e-du-code.vercel.app/
+  - Agence Ecofin refonte : https://agence-ecofin-refonte.vercel.app/
+  - Skillsmaster : https://skillsmaster-henna.vercel.app/
+- Sources/prototypes sans lien live confirmé :
   - PortfolioLens : analyse de portfolios développeur avec recommandations concrètes.
-  - L’Odyssée du Code : apprentissage du code par une expérience gamifiée.
   - Jalo Logistics : site web corporate pour activité logistique.
   - PulseLine : MVP React interactif orienté expérience produit.
-  - Agence Ecofin refonte : use case de refonte éditoriale et hiérarchie d’information.
   - EduGest : concept SaaS de gestion éducative.
   - KAPITA : plateforme africaine d’equity crowdfunding.
-  - We‑Fi : concept de data recycling for connectivity.
 - Parcours : Project Manager & UX/UI Designer chez Jalo Logistics, Directeur artistique chez SÆKUM, Product Designer chez Le Petit Nokoué.
 - Outils : Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads, ChatGPT.
 - Contact : dahissihogabriel@gmail.com, +225 05 96 48 93 43, LinkedIn, GitHub https://github.com/rico-cms, formulaire Tally.

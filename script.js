@@ -241,7 +241,7 @@ function answerQuestion(question){
     return {source:"local",text:"Pour l’UX/UI : Le Petit Nokoué montre l’audit, les frictions et le design system. JDIS montre une UX plus opérationnelle : écrans métiers, parcours critiques, besoin de clarté dans un contexte logistique."};
   }
   if(q.includes("portfolio")||q.includes("jdis")||q.includes("africaine")||q.includes("nokoue")||q.includes("busy")||q.includes("lyz")||(q.includes("projet")&&isAboutProfile(q))){
-    return {source:"local",text:"Lecture rapide des projets : JDIS = pilotage + produit + logistique. Le Petit Nokoué = UX/product design. CDCRB = direction artistique culturelle. Côté GitHub, les projets pertinents mis en avant sont PortfolioLens, L’Odyssée du Code, Jalo Logistics, PulseLine, Agence Ecofin refonte, EduGest, KAPITA et We‑Fi."};
+    return {source:"local",text:"Lecture rapide des projets : JDIS = pilotage + produit + logistique. Le Petit Nokoué = UX/product design. CDCRB = direction artistique culturelle. Côté projets en ligne, les liens live confirmés sont L’Odyssée du Code, Agence Ecofin refonte et Skillsmaster. Les autres sont affichés comme sources/prototypes à déployer."};
   }
   if(q.includes("competence")||q.includes("expertise")||((q.includes("ux")||q.includes("ui")||q.includes("design")||q.includes("branding")||q.includes("strategie"))&&isAboutProfile(q))){
     return {source:"local",text:"Ses compétences fortes : 1) cadrer et piloter, 2) transformer un besoin en expérience utilisable, 3) donner une direction visuelle cohérente. Le point intéressant, c’est la combinaison des trois."};
