@@ -1156,27 +1156,16 @@ em {
 .github-projects {
   position: relative;
   margin-top: 3.2rem;
-  padding: clamp(1.1rem, 3vw, 2rem);
+  padding: clamp(1rem, 2.4vw, 1.6rem);
   overflow: hidden;
   border: 1px solid #ffffff1c;
-  border-radius: 1.55rem;
-  background:
-    radial-gradient(circle at 12% 12%, #ff4b3324, transparent 30%),
-    radial-gradient(circle at 86% 18%, #d7ff3820, transparent 28%),
-    #20211e;
+  border-radius: 1.25rem;
+  background: #20211e;
   color: var(--paper);
 }
 
 .github-projects::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, #ffffff08 1px, transparent 1px),
-    linear-gradient(0deg, #ffffff08 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(90deg, #000, transparent 76%);
-  pointer-events: none;
+  content: none;
 }
 
 .github-projects-head {
@@ -1227,25 +1216,23 @@ em {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, .95fr) minmax(340px, .7fr);
-  gap: 1rem;
+  grid-template-columns: minmax(0, .82fr) minmax(340px, 1fr);
+  gap: .85rem;
   align-items: stretch;
 }
 
 .github-spotlight {
   position: relative;
-  min-height: 580px;
+  min-height: 430px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
   border: 1px solid #ffffff24;
-  border-radius: 1.35rem;
-  background:
-    radial-gradient(circle at 78% 18%, #ffffff90, transparent 16%),
-    linear-gradient(135deg, #f1efe8 0 48%, #d7ff38 48% 100%);
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #f1efe8 0 62%, #d7ff38 62% 100%);
   color: var(--ink);
-  padding: clamp(1rem, 2.2vw, 1.5rem);
+  padding: clamp(1rem, 2vw, 1.35rem);
   transition: transform .28s, filter .28s;
 }
 
@@ -1255,51 +1242,35 @@ em {
 }
 
 .github-spotlight::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 0 42%, #ffffff70 50%, transparent 60%);
-  transform: translateX(-120%);
-  animation: card-sweep 6.5s ease-in-out infinite;
-  pointer-events: none;
+  content: none;
 }
 
 .github-spotlight-art {
   position: relative;
   overflow: hidden;
-  min-height: 250px;
-  border-radius: 1rem;
-  background:
-    radial-gradient(circle at 30% 35%, #ff4b33 0 6px, transparent 7px),
-    radial-gradient(circle at 70% 62%, #171713 0 8px, transparent 9px),
-    linear-gradient(135deg, #171713, #30312e);
+  min-height: 150px;
+  border-radius: .85rem;
+  background: linear-gradient(135deg, #171713, #30312e);
 }
 
 .github-spotlight-art::before {
   content: "";
   position: absolute;
-  inset: 1rem;
+  inset: .9rem;
   border: 1px solid #ffffff24;
-  border-radius: .8rem;
-  background:
-    linear-gradient(90deg, #ffffff10 1px, transparent 1px),
-    linear-gradient(0deg, #ffffff10 1px, transparent 1px);
-  background-size: 28px 28px;
+  border-radius: .65rem;
 }
 
 .github-spotlight-art::after {
   content: "";
   position: absolute;
-  width: 170px;
-  height: 170px;
+  width: 84px;
+  height: 84px;
   right: 11%;
-  bottom: 9%;
-  border: 1px solid #f1efe850;
+  bottom: 16%;
   border-radius: 50%;
-  background: conic-gradient(from 90deg, #ff4b33, #d7ff38, #f1efe8, #ff4b33);
-  filter: blur(.2px);
+  background: #ff4d2e;
   opacity: .85;
-  animation: live-orbit 8s linear infinite;
 }
 
 .github-spotlight-art i {
@@ -1310,7 +1281,6 @@ em {
   border: 2px solid #f1efe8;
   background: #d7e64f;
   transform: skewY(-9deg);
-  animation: jdis-layer 4.8s ease-in-out infinite alternate;
 }
 
 .github-spotlight-art i:nth-child(1) { top: 25%; }
@@ -1333,9 +1303,9 @@ em {
 
 .github-spotlight-copy {
   display: grid;
-  gap: .9rem;
+  gap: .75rem;
   max-width: 760px;
-  padding-top: clamp(1.6rem, 4vw, 3.5rem);
+  padding-top: clamp(1.1rem, 2vw, 1.8rem);
 }
 
 .github-spotlight-copy small,
@@ -1346,7 +1316,7 @@ em {
 }
 
 .github-spotlight-copy strong {
-  font: 800 clamp(3rem, 7vw, 7.2rem) / .78 Syne;
+  font: 800 clamp(2.6rem, 5.4vw, 5.4rem) / .84 Syne;
   letter-spacing: -.075em;
 }
 
@@ -1388,7 +1358,7 @@ em {
   display: grid;
   grid-template-columns: 1fr;
   align-content: stretch;
-  gap: .55rem;
+  gap: .45rem;
 }
 
 .github-project {
@@ -1404,7 +1374,6 @@ em {
   border: 1px solid #ffffff1f;
   border-radius: .85rem;
   background:
-    linear-gradient(135deg, #ffffff09, transparent 62%),
     #ffffff08;
   padding: .85rem .95rem;
   color: var(--paper);
