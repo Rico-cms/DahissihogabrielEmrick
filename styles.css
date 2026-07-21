@@ -693,6 +693,7 @@ em {
 
 .expertise,
 .projects,
+.live-projects,
 .journey,
 .credentials,
 .contact {
@@ -881,7 +882,7 @@ em {
 .projects {
   background: var(--dark);
   color: var(--paper);
-  padding: 7rem 0;
+  padding: 7rem 0 3.5rem;
 }
 
 .projects .index {
@@ -1153,9 +1154,20 @@ em {
   color: #aaa;
 }
 
+.live-projects {
+  background: var(--dark);
+  color: var(--paper);
+  padding: 0 0 7rem;
+}
+
+.live-projects-shell {
+  width: min(1480px, calc(100vw - 40px));
+  margin-inline: auto;
+}
+
 .github-projects {
   position: relative;
-  margin-top: 3.2rem;
+  margin-top: 0;
   padding: clamp(1rem, 2.4vw, 1.6rem);
   overflow: hidden;
   border: 1px solid #ffffff1c;
@@ -1181,7 +1193,7 @@ em {
 .github-projects-head h3 {
   margin: 0;
   max-width: 760px;
-  font: 800 clamp(2.3rem, 5.6vw, 5.8rem) / .84 Syne;
+  font: 800 clamp(2.3rem, 4.4vw, 5rem) / .88 Syne;
   letter-spacing: -.075em;
 }
 
@@ -1316,7 +1328,7 @@ em {
 }
 
 .github-spotlight-copy strong {
-  font: 800 clamp(2.6rem, 5.4vw, 5.4rem) / .84 Syne;
+  font: 800 clamp(2.6rem, 4.2vw, 4.8rem) / .86 Syne;
   letter-spacing: -.075em;
 }
 
@@ -1461,9 +1473,91 @@ em {
   text-transform: uppercase;
 }
 
-@keyframes live-orbit {
-  to {
-    rotate: 360deg;
+@media (min-width: 1280px) {
+  .live-projects-shell {
+    width: min(1540px, calc(100vw - 56px));
+  }
+
+  .github-projects {
+    padding: 1.6rem;
+  }
+
+  .github-projects-head {
+    grid-template-columns: 210px minmax(0, 1fr) auto;
+    align-items: start;
+    margin-bottom: 1.3rem;
+  }
+
+  .github-projects-head h3 {
+    max-width: 860px;
+    font-size: clamp(3.2rem, 4.1vw, 5rem);
+    line-height: .88;
+  }
+
+  .github-projects-head > div p {
+    max-width: 720px;
+    margin-top: .8rem;
+  }
+
+  .github-live-wall {
+    grid-template-columns: minmax(520px, .78fr) minmax(680px, 1.22fr);
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .github-spotlight {
+    min-height: 350px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 170px 1fr auto;
+    gap: 1.1rem;
+  }
+
+  .github-spotlight-art {
+    min-height: 0;
+    height: 170px;
+    grid-row: auto;
+  }
+
+  .github-spotlight-copy {
+    align-self: center;
+    padding-top: 0;
+  }
+
+  .github-spotlight-copy strong {
+    font-size: clamp(2.8rem, 3vw, 3.7rem);
+    line-height: .86;
+  }
+
+  .github-spotlight > b {
+    position: static;
+    justify-self: start;
+    align-self: end;
+    width: fit-content;
+  }
+
+  .github-project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .65rem;
+  }
+
+  .github-project {
+    min-height: 128px;
+    grid-template-columns: 2.35rem minmax(0, 1fr);
+    grid-template-areas:
+      "num title"
+      "num copy"
+      "num meta"
+      "num cta";
+  }
+
+  .github-project strong {
+    padding-right: 0;
+  }
+
+  .github-project em,
+  .github-project b {
+    justify-self: start;
   }
 }
 
@@ -2083,9 +2177,18 @@ dialog li {
   .expertise,
   .journey,
   .projects,
+  .live-projects,
   .credentials {
     padding-top: 6rem;
     padding-bottom: 6rem;
+  }
+
+  .projects {
+    padding-bottom: 3rem;
+  }
+
+  .live-projects {
+    padding-top: 0;
   }
 
   .project-grid {
@@ -2234,6 +2337,10 @@ dialog li {
   .github-projects {
     margin-top: 2rem;
     padding: 1rem;
+  }
+
+  .live-projects-shell {
+    width: var(--shell);
   }
 
   .github-projects-head,
