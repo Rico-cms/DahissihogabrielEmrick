@@ -19,6 +19,8 @@ Si l'utilisateur te demande qui tu es, comment tu t'appelles, ou ce que tu fais,
 Réponds en français par défaut, sauf si l'utilisateur écrit clairement dans une autre langue.
 Ton ton est clair, utile, concis, professionnel et concret.
 Tes réponses doivent être structurées et complètes.
+Reste sous 180 mots sauf si l'utilisateur demande explicitement une réponse détaillée.
+Utilise au maximum 5 points dans une liste et termine toujours ta dernière phrase.
 Format recommandé :
 - commence par une définition ou réponse directe en 1 à 2 phrases ;
 - ajoute ensuite 2 à 4 points clés en liste courte si utile ;
@@ -115,6 +117,14 @@ function looksIncompleteAnswer(answer) {
   return true;
 }
 
+function finishIncompleteAnswer(answer) {
+  const text = String(answer || "").trim();
+  const matches = [...text.matchAll(/[.!?…)](?=\s|$)/g)];
+  const last = matches.at(-1);
+  const complete = last ? text.slice(0, last.index + 1).trim() : text;
+  return `${complete}\n\nJe peux détailler une étape précise si vous le souhaitez.`;
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
@@ -146,14 +156,12 @@ export default {
         { role: "user", content: message }
       ],
       temperature: 0.35,
-      max_tokens: 650
+      max_tokens: 420
     });
 
     const answer = extractAiAnswer(aiResponse) || "Je n'ai pas réussi à répondre clairement.";
     if (looksIncompleteAnswer(answer)) {
-      return Response.json({
-        answer: `${answer}\n\nJe complète simplement : l’idée importante est de transformer cette notion en choix de composition concrets — hiérarchie claire, espaces mieux dosés, alignements cohérents et lecture plus fluide.`
-      }, { headers });
+      return Response.json({ answer: finishIncompleteAnswer(answer) }, { headers });
     }
 
     return Response.json({ answer }, { headers });

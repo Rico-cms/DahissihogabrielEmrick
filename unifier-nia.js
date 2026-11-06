@@ -104,7 +104,7 @@
 
   async function askEndpoint(question) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 18000);
+    const timeout = setTimeout(() => controller.abort(), 30000);
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
