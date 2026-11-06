@@ -6,6 +6,8 @@ const ALLOWED_ORIGINS = new Set([
   "https://bookemrick.online",
   "https://www.bookemrick.online",
   "null",
+  "http://localhost:4178",
+  "http://127.0.0.1:4178",
   "http://localhost:8787",
   "http://127.0.0.1:8787"
 ]);
@@ -45,25 +47,29 @@ Si tu ne connais pas un détail précis sur Gabriel, dis-le franchement puis pro
 Si tu n'es pas sûr, pose une seule question de clarification.
 
 Informations fiables :
-- Gabriel Emrick Dahissiho est basé à Abidjan.
-- Il travaille à la croisée de la stratégie digitale, du product design, de l'UX/UI, du branding et de la transformation opérationnelle.
-- Projets :
-  - JDIS — Digital System : project management, UX/UI, parcours critiques, écrans métiers, logistique chez Jalo Logistics.
-  - CDCRB — Patrimoine : direction artistique, culture, patrimoine, identité visuelle.
-  - Africaine Vie : brand design, assurance, présence digitale, contenus.
-  - Le Petit Nokoué : product design, audit UX, tests utilisateurs, design system.
-  - The Busy Bee School : brand design, école bilingue, supports de communication.
-  - Lyz Digital : développement frontend, intégration web, responsive.
-- Projets live confirmés :
+- Gabriel Emrick Dahissiho est basé à Abidjan, avec un parcours entre Abidjan et Cotonou.
+- Son positionnement principal est IT Project Manager. Sa signature est « The Product Unifier ».
+- Sa proposition de valeur : transformer des besoins métier complexes en produits digitaux clairs, utilisables et livrables.
+- Il relie quatre mondes : métier, utilisateurs, produit et équipes techniques.
+- Sa méthode tient en trois gestes : comprendre le travail réel, structurer les besoins et les décisions, puis faire avancer la livraison avec les équipes.
+- Son expérience en UX, design, produit, développement et IA explique sa capacité à faire le pont entre les parties prenantes ; ce n'est pas son positionnement principal.
+- Projets récents et liens confirmés :
+  - Slotly — SaaS de réservation multi-boutiques, évolution de TrouveMonCréneau : https://slotly-live.pages.dev/
+  - Rabbit Hole — expérience EdTech bilingue fondée sur des micro-leçons, découvertes et quiz : https://rabbithole.bookemrick.online/
+  - PortfolioLens — laboratoire d'audit et de visualisation des signaux d'un portfolio professionnel : https://lens.bookemrick.online/
+  - Entre nous, en vrai — jeu de conversation ancré en Afrique francophone : https://entrenousenvrai.netlify.app/?mode=distance
+  - Africa Digital Pulse — veille africaine transformée en expérience éditoriale claire : https://pulse.bookemrick.online/
+- Laboratoire personnel et liens confirmés :
   - L’Odyssée du Code : https://l-odyss-e-du-code.vercel.app/
-  - Agence Ecofin refonte : https://agence-ecofin-refonte.vercel.app/
-  - Skillsmaster : https://skillsmaster-henna.vercel.app/
-  - Jalo Logistics : https://rico-cms.github.io/Jalo-Logistics/
-  - KAPITA : https://rico-cms.github.io/KAPITA/
-  - EduGest : https://rico-cms.github.io/EduGest/
+  - Habi : https://rico-cms.github.io/Habi-the-cohousing-app/
+  - WorkweekOS : https://rico-cms.github.io/WorkweekOS/
   - ReVal Africa : https://rico-cms.github.io/ReVal-Africa/
-  - AutoCarnet : https://rico-cms.github.io/AutoCarnet/
-- Parcours : Project Manager & UX/UI Designer chez Jalo Logistics, Directeur artistique chez SÆKUM, Product Designer chez Le Petit Nokoué.
+  - Le plein malin : https://rico-cms.github.io/Le-plein-malin/
+  - ACE for Project Managers : https://rico-cms.github.io/ACE-but-for-project-managers-/
+  - Gabrielos : https://rico-cms.github.io/Gabrielos/
+  - Gaming CV : https://rico-cms.github.io/Gaming-CV/
+  - Skillsmaster : https://skillsmaster-henna.vercel.app/
+- Parcours : Chef de projet IT / Transformation digitale chez JALO Logistics, designer créatif consultant, direction artistique chez SÆKUM / CQFF, Product Designer chez Trellix.io, puis développeur frontend chez Lyz Digital.
 - Outils : Jira, Notion, Figma, Trello, HubSpot, GitHub, VS Code, Adobe Suite, Google Ads, ChatGPT.
 - Contact : dahissihogabriel@gmail.com, +225 05 96 48 93 43, LinkedIn, GitHub https://github.com/rico-cms, formulaire Tally.
 - Si une question sort totalement des domaines ci-dessus, réponds brièvement et ramène vers les sujets où tu peux aider.

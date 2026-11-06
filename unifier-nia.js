@@ -23,6 +23,7 @@
 
   const copy = {
     fr: {
+      welcome: "Bonjour, je suis Nia. Je peux vous aider à comprendre le profil d’Emrick, sa méthode et les projets à explorer.",
       suggestions: ["Pitch en 20 secondes", "Quels projets voir ?", "Pourquoi le recruter ?", "Comment travaille-t-il ?"],
       thinking: "Je réfléchis…",
       unavailable: "Le service IA est momentanément indisponible. Je peux tout de même répondre sur le profil, les projets, la méthode ou le contact d’Emrick.",
@@ -30,6 +31,7 @@
       send: "Envoyer"
     },
     en: {
+      welcome: "Hello, I’m Nia. I can help you understand Emrick’s profile, working method and the projects worth exploring.",
       suggestions: ["20-second pitch", "Which projects should I see?", "Why hire him?", "How does he work?"],
       thinking: "Thinking…",
       unavailable: "The AI service is temporarily unavailable. I can still answer questions about Emrick’s profile, projects, method or contact details.",
@@ -134,6 +136,8 @@
     if (inputLabel) inputLabel.textContent = en ? "Your question" : "Votre question";
     input.setAttribute("aria-label", en ? "Your question" : "Votre question");
     submit.textContent = copy[locale()].send;
+    const welcome = root.querySelector(".chat-welcome");
+    if (welcome && history.length === 0) welcome.innerHTML = formatAnswer(copy[locale()].welcome);
     toggle.setAttribute("aria-label", en ? "Open Nia assistant" : "Ouvrir l’assistante Nia");
     close.setAttribute("aria-label", en ? "Close Nia" : "Fermer Nia");
     suggestions.setAttribute("aria-label", en ? "Suggested questions" : "Questions suggérées");
@@ -184,6 +188,6 @@
     ask(question);
   });
   document.addEventListener("keydown", event => { if (event.key === "Escape" && root.classList.contains("open")) setOpen(false); });
-  document.querySelector(".language")?.addEventListener("click", () => setTimeout(renderSuggestions, 0));
+  document.querySelector("#lang, .language")?.addEventListener("click", () => setTimeout(renderSuggestions, 0));
   renderSuggestions();
 })();
